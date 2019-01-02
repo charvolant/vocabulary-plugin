@@ -1,0 +1,19 @@
+---
+grails:
+    profile: web-plugin
+    codegen:
+        defaultPackage: au.org.ala.vocabulary
+    gorm:
+        reactor:
+            # Whether to translate GORM events into Reactor events
+            # Disabled by default for performance reasons
+            events: false
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+---
+vocabulary:
+  server: http://localhost:8080
+  service: http://localhost:8090

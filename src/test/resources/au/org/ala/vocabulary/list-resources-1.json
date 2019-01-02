@@ -1,0 +1,189 @@
+{
+  "@language": "en",
+  "@count": 6,
+  "@graph": [
+    {
+      "@id": "http://www.ala.org.au/format/1.0/categories/description",
+      "@type": "format:Category",
+      "@label": "description",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/description",
+      "@title": "Description",
+      "@description": "Descriptive information: labels, titles, description etc.",
+      "dcterms:description": {
+        "@value": "Descriptive information: labels, titles, description etc."
+      },
+      "dcterms:title": {
+        "@value": "Description"
+      },
+      "format:priority": {
+        "@value": 1000,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    {
+      "@id": "http://www.ala.org.au/format/1.0/categories/display",
+      "@type": "format:Category",
+      "@label": "display",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/display",
+      "@title": "Display",
+      "@description": "Information about how to display a class or property",
+      "dcterms:description": {
+        "@value": "Information about how to display a class or property"
+      },
+      "dcterms:title": {
+        "@value": "Display"
+      },
+      "format:priority": {
+        "@value": 800,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    {
+      "@id": "http://www.ala.org.au/format/1.0/categories/metadata",
+      "@type": "format:Category",
+      "@label": "metadata",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/metadata",
+      "@title": "Metadata",
+      "@description": "Information about a resource.",
+      "dcterms:description": {
+        "@value": "Information about a resource."
+      },
+      "dcterms:title": {
+        "@value": "Metadata"
+      },
+      "format:priority": {
+        "@value": 500,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    }
+  ],
+  "@context": {
+    "dwc": "http://rs.tdwg.org/dwc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "format": "http://www.ala.org.au/format/1.0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ala": "http://www.ala.org.au/terms/1.0/",
+    "format:Category": {
+      "@id": "http://www.ala.org.au/format/1.0/Category",
+      "@type": "owl:Class",
+      "@label": "Category",
+      "@shortId": "format:Category",
+      "@description": "A category of properties. Used to decide how to format and display information about a resource. Annotations on properties can assign them to categories to allow suitable display.",
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A category of properties. Used to decide how to format and display information about a resource. Annotations on properties can assign them to categories to allow suitable display."
+      },
+      "rdfs:label": {
+        "@value": "Category"
+      },
+      "rdfs:subClassOf": "owl:Thing"
+    },
+    "http://www.ala.org.au/format/1.0/categories/display": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/display",
+      "@type": "format:Category",
+      "@label": "display",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/display",
+      "@title": "Display",
+      "@description": "Information about how to display a class or property",
+      "dcterms:description": {
+        "@value": "Information about how to display a class or property"
+      },
+      "dcterms:title": {
+        "@value": "Display"
+      },
+      "format:priority": {
+        "@value": 800,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/description": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/description",
+      "@type": "format:Category",
+      "@label": "description",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/description",
+      "@title": "Description",
+      "@description": "Descriptive information: labels, titles, description etc.",
+      "dcterms:description": {
+        "@value": "Descriptive information: labels, titles, description etc."
+      },
+      "dcterms:title": {
+        "@value": "Description"
+      },
+      "format:priority": {
+        "@value": 1000,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "rdf:type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id",
+      "@label": "type",
+      "@shortId": "rdf:type",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "dcterms:description": {
+      "@id": "http://purl.org/dc/terms/description",
+      "@type": "@id",
+      "@label": "description",
+      "@shortId": "dcterms:description",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "dcterms:title": {
+      "@id": "http://purl.org/dc/terms/title",
+      "@type": "@id",
+      "@label": "title",
+      "@shortId": "dcterms:title",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:description"
+    },
+    "format:priority": {
+      "@id": "http://www.ala.org.au/format/1.0/priority",
+      "@type": "owl:DatatypeProperty",
+      "@label": "priority",
+      "@shortId": "format:priority",
+      "@description": "The priority of a category or other preference-driven display option.",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "rdf:type": "owl:DatatypeProperty",
+      "rdfs:comment": {
+        "@value": "The priority of a category or other preference-driven display option.",
+        "@language": "en"
+      },
+      "rdfs:label": {
+        "@value": "priority"
+      },
+      "rdfs:range": "xsd:integer"
+    },
+    "owl:DatatypeProperty": {
+      "@id": "http://www.w3.org/2002/07/owl#DatatypeProperty",
+      "@type": "@id",
+      "@label": "DatatypeProperty",
+      "@shortId": "owl:DatatypeProperty"
+    },
+    "xsd:integer": {
+      "@id": "http://www.w3.org/2001/XMLSchema#integer",
+      "@type": "@id",
+      "@label": "integer",
+      "@shortId": "xsd:integer"
+    }
+  },
+  "@categorisation": {
+    "http://www.ala.org.au/format/1.0/categories/description": [
+      "dcterms:title",
+      "dcterms:description",
+      "rdf:type"
+    ],
+    "http://www.ala.org.au/format/1.0/categories/display": [
+      "format:priority"
+    ]
+  }
+}

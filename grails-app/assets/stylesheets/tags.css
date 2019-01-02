@@ -1,0 +1,17 @@
+/* Static tag shapes an information */
+
+a.tag-term {
+    color: inherit;
+}
+
+.tag-term {
+    display: inline-block;
+    padding: 0.2ex 0.5ex 0.2ex 1.5ex;
+    border-radius: 1.5ex 0.5ex 0.5ex 1.5ex;
+}
+
+.tag-term span:before {
+    content: "\25cb ";
+    position: relative;
+    left: -1.0ex;
+}

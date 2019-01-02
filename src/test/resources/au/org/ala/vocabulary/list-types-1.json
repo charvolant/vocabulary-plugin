@@ -1,0 +1,257 @@
+{
+  "@language": "en",
+  "@count": 21,
+  "@graph": [
+    {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#Resource",
+      "@type": "@id",
+      "@label": "Resource",
+      "@shortId": "rdfs:Resource"
+    },
+    {
+      "@id": "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+      "@type": "@id",
+      "@label": "ConceptScheme",
+      "@shortId": "skos:ConceptScheme"
+    },
+    {
+      "@id": "http://www.w3.org/2002/07/owl#Thing",
+      "@type": "@id",
+      "@label": "Thing",
+      "@shortId": "owl:Thing"
+    },
+    {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "@type": "@id",
+      "@label": "Property",
+      "@shortId": "rdf:Property"
+    },
+    {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#List",
+      "@type": "@id",
+      "@label": "List",
+      "@shortId": "rdf:List"
+    }
+   ],
+  "@context": {
+    "dwc": "http://rs.tdwg.org/dwc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "format": "http://www.ala.org.au/format/1.0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ala": "http://www.ala.org.au/terms/1.0/",
+    "owl:Class": {
+      "@id": "http://www.w3.org/2002/07/owl#Class",
+      "@type": "@id",
+      "@label": "Class",
+      "@shortId": "owl:Class"
+    },
+    "skos:ConceptScheme": {
+      "@id": "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+      "@type": "@id",
+      "@label": "ConceptScheme",
+      "@shortId": "skos:ConceptScheme"
+    },
+    "owl:Thing": {
+      "@id": "http://www.w3.org/2002/07/owl#Thing",
+      "@type": "@id",
+      "@label": "Thing",
+      "@shortId": "owl:Thing"
+    },
+    "skos:Concept": {
+      "@id": "http://www.w3.org/2004/02/skos/core#Concept",
+      "@type": "@id",
+      "@label": "Concept",
+      "@shortId": "skos:Concept"
+    },
+    "dwc:taxonomicStatus": {
+      "@id": "http://rs.tdwg.org/dwc/terms/taxonomicStatus",
+      "@type": "@id",
+      "@label": "taxonomicStatus",
+      "@shortId": "dwc:taxonomicStatus"
+    },
+    "http://www.ala.org.au/format/1.0/categories/structure": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/structure",
+      "@type": "format:Category",
+      "@label": "structure",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/structure",
+      "@title": "Structure",
+      "@description": "Information about the structure of class or property",
+      "dcterms:description": {
+        "@value": "Information about the structure of class or property"
+      },
+      "dcterms:title": {
+        "@value": "Structure"
+      },
+      "format:priority": {
+        "@value": 600,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/description": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/description",
+      "@type": "format:Category",
+      "@label": "description",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/description",
+      "@title": "Description",
+      "@description": "Descriptive information: labels, titles, description etc.",
+      "dcterms:description": {
+        "@value": "Descriptive information: labels, titles, description etc."
+      },
+      "dcterms:title": {
+        "@value": "Description"
+      },
+      "format:priority": {
+        "@value": 1000,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/vocabulary": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "@type": "format:Category",
+      "@label": "vocabulary",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "@title": "Vocabulary",
+      "@description": "Vocabulary information, such as broader/narrower terms, schemes etc.",
+      "dcterms:description": {
+        "@value": "Vocabulary information, such as broader/narrower terms, schemes etc."
+      },
+      "dcterms:title": {
+        "@value": "Vocabulary"
+      },
+      "format:priority": {
+        "@value": 900,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "rdf:type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id",
+      "@label": "type",
+      "@shortId": "rdf:type",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "dcterms:description": {
+      "@id": "http://purl.org/dc/terms/description",
+      "@type": "@id",
+      "@label": "description",
+      "@shortId": "dcterms:description",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "rdfs:comment": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#comment",
+      "@type": "@id",
+      "@label": "comment",
+      "@shortId": "rdfs:comment",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "rdfs:label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type": "@id",
+      "@label": "label",
+      "@shortId": "rdfs:label",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:title"
+    },
+    "dcterms:title": {
+      "@id": "http://purl.org/dc/terms/title",
+      "@type": "@id",
+      "@label": "title",
+      "@shortId": "dcterms:title",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:description"
+    },
+    "rdfs:subClassOf": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      "@type": "@id",
+      "@label": "subClassOf",
+      "@shortId": "rdfs:subClassOf",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure"
+    },
+    "skos:prefLabel": {
+      "@id": "http://www.w3.org/2004/02/skos/core#prefLabel",
+      "@type": "@id",
+      "@label": "prefLabel",
+      "@shortId": "skos:prefLabel",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "rdfs:label"
+    },
+    "ala:forTerm": {
+      "@id": "http://www.ala.org.au/terms/1.0/forTerm",
+      "@type": "rdf:Property",
+      "@label": "for term",
+      "@shortId": "ala:forTerm",
+      "@description": "The DwC term that this is a controlled vocabulary for.",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": "skos:definition",
+      "rdf:type": "rdf:Property",
+      "rdfs:comment": {
+        "@value": "The DwC term that this is a controlled vocabulary for.",
+        "@language": "en"
+      },
+      "rdfs:domain": "ala:DwCVocabulary",
+      "rdfs:label": {
+        "@value": "for term"
+      },
+      "rdfs:range": "owl:Thing"
+    },
+    "rdf:Property": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "@type": "@id",
+      "@label": "Property",
+      "@shortId": "rdf:Property"
+    },
+    "skos:definition": {
+      "@id": "http://www.w3.org/2004/02/skos/core#definition",
+      "@type": "@id",
+      "@label": "definition",
+      "@shortId": "skos:definition",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": [
+        "dcterms:description",
+        "rdfs:comment"
+      ],
+      "format:comesBefore": "skos:note"
+    },
+    "ala:DwCVocabulary": {
+      "@id": "http://www.ala.org.au/terms/1.0/DwCVocabulary",
+      "@type": "owl:Class",
+      "@label": "Vocabulary",
+      "@shortId": "ala:DwCVocabulary",
+      "@description": "A controlled vocabulary used to manage darwin core terms",
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A controlled vocabulary used to manage darwin core terms"
+      },
+      "rdfs:label": {
+        "@value": "Vocabulary"
+      },
+      "rdfs:subClassOf": "skos:ConceptScheme",
+      "skos:prefLabel": {
+        "@value": "Vocabulary"
+      }
+    }
+  },
+  "@categorisation": {
+    "http://www.ala.org.au/format/1.0/categories/description": [
+      "skos:prefLabel",
+      "rdfs:label",
+      "rdfs:comment",
+      "rdf:type"
+    ],
+    "http://www.ala.org.au/format/1.0/categories/vocabulary": [
+      "ala:forTerm"
+    ],
+    "http://www.ala.org.au/format/1.0/categories/structure": [
+      "rdfs:subClassOf"
+    ]
+  }
+}
