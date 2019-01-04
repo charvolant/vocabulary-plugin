@@ -91,27 +91,42 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test voc:tag 1'() {
         expect:
-        applyTemplate('<voc:tag iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder" iri="urn:ietf:rfc:2648">2648</span>'
+        applyTemplate('<voc:tag iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder tag-concept" iri="urn:ietf:rfc:2648">2648</span>'
     }
 
     def 'test voc:tag 2'() {
         expect:
-        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder" iri="http://www.ala.org.au/format/1.0/style/icon">icon</span>'
+        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">icon</span>'
     }
 
     def 'test voc:tag 3'() {
         expect:
-        applyTemplate('<voc:tag term="TK NV"/>') == '<span class="tag-holder" term="TK NV">TK NV</span>'
+        applyTemplate('<voc:tag concept="TK NV"/>') == '<span class="tag-holder tag-concept" concept="TK NV">TK NV</span>'
     }
 
     def 'test voc:tag 4'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="tkLabels" term="TK NV"/>') == '<span class="tag-holder" vocabulary="tkLabels" term="TK NV">TK NV</span>'
+        applyTemplate('<voc:tag vocabulary="tkLabels" concept="TK NV"/>') == '<span class="tag-holder tag-concept" vocabulary="tkLabels" concept="TK NV">TK NV</span>'
     }
 
     def 'test voc:tag 5'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder" vocabulary="taxonomicStatus">unknown</span>'
+        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">unknown</span>'
+    }
+
+    def 'test voc:lang 1'() {
+        expect:
+        applyTemplate('<voc:language iri="urn:iso639-1:de"/>') == '<span class="language-holder tag-language" iri="urn:iso639-1:de">de</span>'
+    }
+
+    def 'test voc:lang 2'() {
+        expect:
+        applyTemplate('<voc:language iri="http://www.ala.org.au/language/1.0/iso639-3/eng"/>') == '<span class="language-holder tag-language" iri="http://www.ala.org.au/language/1.0/iso639-3/eng">eng</span>'
+    }
+
+    def 'test voc:lang 3'() {
+        expect:
+        applyTemplate('<voc:language lang="akk"/>') == '<span class="language-holder tag-language" lang="akk">akk</span>'
     }
 
     def 'test voc:label 1'() {

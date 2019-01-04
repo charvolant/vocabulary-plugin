@@ -9,6 +9,8 @@ class VocabularyTagLib {
     static TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
     /** The IRI for the format:Tag class */
     static TAG = 'http://www.ala.org.au/format/1.0/Tag'
+    /** The IRI for the format:Language class */
+    static LANGUAGE= 'http://www.ala.org.au/format/1.0/Language'
     /** The IRI for the format:style attribute */
     static STYLE = 'http://www.ala.org.au/format/1.0/style'
     /** The IRI for the format:cssClass attribute */
@@ -192,9 +194,9 @@ class VocabularyTagLib {
     }
 
     /**
-     * Generate a tag that describes vocabulary term.
+     * Generate a tag that describes vocabulary concept.
      * <p>
-     * Terms are assumed to come from a SKOS skos:Concept contained within a
+     * Concepts are assumed to come from a SKOS skos:Concept contained within a
      * skos:ConceptScheme vocabulary, related by skos:inScheme.
      * The term is generally indicated by skos:notation (or skos:prefLabel, rdfs:label).
      * The vocabulary can either be indicated by skos:notation/skos:prefLabel/rdfs:label
@@ -209,29 +211,65 @@ class VocabularyTagLib {
      * There are three ways of generating a tag:
      *
      * <ul>
-     *     <li>iri only: generates a tag directly from the term IRI</li>
-     *     <li>vocabulary/term: Uses the DwC term or vocabulary name and the term label</li>
-     *     <li>term only: Looks up a unique term directly (not reliable if there is a term collision)</li>
+     *     <li>iri only: generates a tag directly from the concept IRI</li>
+     *     <li>vocabulary/concept: Uses the DwC term or vocabulary name and the concept label</li>
+     *     <li>concept only: Looks up a unique term directly (not reliable if there is a concept collision)</li>
      * </ul>
      *
      * @attr iri The full tag iri
      * @attr vocabulary The name of the vocabulary/dwc term
-     * @attr term The term
+     * @attr concept The concept
      */
     def tag = { attrs, body ->
         def iri = attrs.iri
         def vocabulary = attrs.vocabulary
-        def term = attrs.term
-        if (!iri && !vocabulary && !term)
-            term = 'unknown'
-        def text = term ?: localName(iri) ?: 'unknown'
-        out << "<span class=\"tag-holder\""
+        def concept = attrs.concept
+        if (!iri && !vocabulary && !concept)
+            concept = 'unknown'
+        def text = concept ?: localName(iri) ?: 'unknown'
+        out << "<span class=\"tag-holder tag-concept\""
         if (iri)
             out << " iri=\"${iri.encodeAsHTML()}\""
         if (vocabulary)
             out << " vocabulary=\"${vocabulary.encodeAsHTML()}\""
-        if (term)
-            out << " term=\"${term.encodeAsHTML()}\""
+        if (concept)
+            out << " concept=\"${concept.encodeAsHTML()}\""
+        out << ">${text}</span>"
+    }
+
+    /**
+     * Generate a tag that describes a language.
+     * <p>
+     * Languages are assumed to come from a SKOS skos:Concept contained within a
+     * skos:ConceptScheme vocabulary, related by skos:inScheme.
+     * The term is generally indicated by skos:notation (or skos:prefLabel, rdfs:label).
+     * </p>
+     * <p>
+     * Tags are expanded by the data supplied by the vocabulary service and javascript
+     * supplied by tags.js. These are all included in a page by using the {@link #tagHeader}
+     * tag.
+     * </p>
+     * There are three ways of generating a language tag:
+     *
+     * <ul>
+     *     <li>iri only: generates a tag directly from the term IRI</li>
+     *     <li>lang only: Looks up a unique term directly (not reliable if there is a term collision)</li>
+     * </ul>
+     *
+     * @attr iri The full language iri
+     * @attr lang The language code
+     */
+    def language = { attrs, body ->
+        def iri = attrs.iri
+        def lang = attrs.lang
+        if (!iri && !lang)
+            lang = 'unknown'
+        def text = lang ?: localName(iri) ?: 'unknown'
+        out << "<span class=\"language-holder tag-language\""
+        if (iri)
+            out << " iri=\"${iri.encodeAsHTML()}\""
+        if (lang)
+            out << " lang=\"${lang.encodeAsHTML()}\""
         out << ">${text}</span>"
     }
 
@@ -266,6 +304,25 @@ class VocabularyTagLib {
         def context = pageScope.context
         def type = contract(TYPE, context)
         def tag = contract(TAG, context)
+        def types = term[type]
+        if (types && (types == tag || types.contains(tag))) {
+            out << body()
+        }
+    }
+
+    /**
+     * Test to see if a resource is a language. If so, include the body.
+     * <p>
+     * This looks for ala:Language in the types.
+     *
+     * @attr term The term to test (a JSON LD resource)
+     * @attr pageScope.context The associated context
+     */
+    def isLanguage = { attrs, body ->
+        def term = attrs.term
+        def context = pageScope.context
+        def type = contract(TYPE, context)
+        def tag = contract(LANGUAGE, context)
         def types = term[type]
         if (types && (types == tag || types.contains(tag))) {
             out << body()
