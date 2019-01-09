@@ -1,5 +1,6 @@
 package au.org.ala.vocabulary
 
+import au.org.ala.util.TitleCapitaliser
 import grails.testing.web.taglib.TagLibUnitTest
 import spock.lang.Specification
 
@@ -57,27 +58,81 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test localName 1'() {
         expect:
-        tagLib.localName('http://www.ala.org.au/format/1.0/style/icon') == 'icon'
+        tagLib.buildLocalName('http://www.ala.org.au/format/1.0/style/icon') == 'icon'
     }
 
     def 'test localName 2'() {
         expect:
-        tagLib.localName('http://www.w3.org/2004/02/skos/core#Concept') == 'Concept'
+        tagLib.buildLocalName('http://www.w3.org/2004/02/skos/core#Concept') == 'Concept'
     }
 
     def 'test localName 3'() {
         expect:
-        tagLib.localName('urn:ietf:rfc:2648') == '2648'
+        tagLib.buildLocalName('urn:ietf:rfc:2648') == '2648'
     }
 
     def 'test localName 4'() {
         expect:
-        tagLib.localName('') == null
+        tagLib.buildLocalName('') == null
     }
 
     def 'test localName 5'() {
         expect:
-        tagLib.localName('sweet-william') == 'sweet-william'
+        tagLib.buildLocalName('sweet-william') == 'sweet-william'
+    }
+
+    def 'test expandCamelCase 1'() {
+        expect:
+        tagLib.expandCamelCase('hello') == 'Hello'
+    }
+
+    def 'test expandCamelCase 2'() {
+        expect:
+        tagLib.expandCamelCase('Hello') == 'Hello'
+    }
+
+    def 'test expandCamelCase 3'() {
+        expect:
+        tagLib.expandCamelCase('taxonomicStatus') == 'Taxonomic Status'
+    }
+
+    def 'test expandCamelCase 4'() {
+        expect:
+        tagLib.expandCamelCase('aSpaceShip') == 'A Space Ship'
+    }
+
+    def 'test expandCamelCase 5'() {
+        expect:
+        tagLib.expandCamelCase('enquiryIntoTheCausesOfBiology') == 'Enquiry Into the Causes of Biology'
+    }
+
+    def 'test expandCamelCase 6'() {
+        given:
+        response.locale = Locale.GERMAN // Tends to look up defaults
+        expect:
+        tagLib.expandCamelCase('depthInMeters') == 'Depth in Meters'
+    }
+
+    def 'test expandCamelCase 7'() {
+        given:
+        response.locale = Locale.FRENCH
+        expect:
+        tagLib.expandCamelCase('laLumièreDeLaChatEtLeChien') == 'La Lumière de la Chat et le Chien'
+    }
+
+    def 'test expandCamelCase 8'() {
+        expect:
+        tagLib.expandCamelCase('datasetID') == 'Dataset ID'
+    }
+
+    def 'test expandCamelCase 9'() {
+        expect:
+        tagLib.expandCamelCase('iso639') == 'Iso 639'
+    }
+
+    def 'test expandCamelCase 10'() {
+        expect:
+        tagLib.expandCamelCase('iso639-1') == 'Iso 639-1'
     }
 
     def 'test voc:tagHeader 1'() {
@@ -96,7 +151,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test voc:tag 2'() {
         expect:
-        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">icon</span>'
+        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">Icon</span>'
     }
 
     def 'test voc:tag 3'() {
@@ -111,7 +166,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test voc:tag 5'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">unknown</span>'
+        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">Unknown</span>'
     }
 
     def 'test voc:lang 1'() {
@@ -127,6 +182,31 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
     def 'test voc:lang 3'() {
         expect:
         applyTemplate('<voc:language lang="akk"/>') == '<span class="language-holder tag-language" lang="akk">akk</span>'
+    }
+
+    def 'test voc:term 1'() {
+        expect:
+        applyTemplate('<voc:term iri="urn:iso639-1:de"/>') == '<span class="term-holder tag-term" iri="urn:iso639-1:de">De</span>'
+    }
+
+    def 'test voc:term 2'() {
+        expect:
+        applyTemplate('<voc:term iri="http://purl.org/dc/terms/accessRights"/>') == '<span class="term-holder tag-term" iri="http://purl.org/dc/terms/accessRights">Access Rights</span>'
+    }
+
+    def 'test voc:term 3'() {
+        expect:
+        applyTemplate('<voc:term iri="http://rs.tdwg.org/dwc/terms/occurrenceID"/>') == '<span class="term-holder tag-term" iri="http://rs.tdwg.org/dwc/terms/occurrenceID">Occurrence ID</span>'
+    }
+
+    def 'test voc:term 4'() {
+        expect:
+        applyTemplate('<voc:term vocabulary="dwc" term="occurrenceID"/>') == '<span class="term-holder tag-term" vocabulary="dwc" term="occurrenceID">Occurrence ID</span>'
+    }
+
+    def 'test voc:term 5'() {
+        expect:
+        applyTemplate('<voc:term term="occurrenceID"/>') == '<span class="term-holder tag-term" term="occurrenceID">Occurrence ID</span>'
     }
 
     def 'test voc:label 1'() {

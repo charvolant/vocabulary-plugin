@@ -1,5 +1,8 @@
 package au.org.ala.vocabulary
 
+import au.org.ala.util.CamelCaseTokenizer
+import au.org.ala.util.TitleCapitaliser
+
 class VocabularyTagLib {
     static namespace = "voc"
 
@@ -226,7 +229,7 @@ class VocabularyTagLib {
         def concept = attrs.concept
         if (!iri && !vocabulary && !concept)
             concept = 'unknown'
-        def text = concept ?: localName(iri) ?: 'unknown'
+        def text = expandCamelCase(concept ?: buildLocalName(iri) ?: 'unknown')
         out << "<span class=\"tag-holder tag-concept\""
         if (iri)
             out << " iri=\"${iri.encodeAsHTML()}\""
@@ -264,12 +267,51 @@ class VocabularyTagLib {
         def lang = attrs.lang
         if (!iri && !lang)
             lang = 'unknown'
-        def text = lang ?: localName(iri) ?: 'unknown'
+        def text = lang ?: buildLocalName(iri) ?: 'unknown'
         out << "<span class=\"language-holder tag-language\""
         if (iri)
             out << " iri=\"${iri.encodeAsHTML()}\""
         if (lang)
             out << " lang=\"${lang.encodeAsHTML()}\""
+        out << ">${text}</span>"
+    }
+
+    /**
+     * Generate a term that describes a data property.
+     * <p>
+     * Terms are usually derived from an rdfs:Property
+     * </p>
+     * <p>
+     * Terms are expanded by the data supplied by the vocabulary service and javascript
+     * supplied by tags.js. These are all included in a page by using the {@link #tagHeader}
+     * tag.
+     * </p>
+     * There are three ways of generating a language tag:
+     *
+     * <ul>
+     *     <li>iri only: generates a tag directly from the term IRI</li>
+     *     <li>vocabulary/term: Uses the vocabulary name and the term label</li>
+     *     <li>term only: Looks up a unique term directly (not reliable if there is a term collision)</li>
+     * </ul>
+     *
+     * @attr iri The full language iri
+     * @attr term The term name
+     * @attr locale The locale, defaults to the response locale or request locale
+     */
+    def term = { attrs, body ->
+        def iri = attrs.iri
+        def vocabulary = attrs.vocabulary
+        def term = attrs.term
+        if (!iri && !vocabulary && !term)
+            term = 'unknown'
+        def text = expandCamelCase(term ?: buildLocalName(iri) ?: 'unknown')
+        out << "<span class=\"term-holder tag-term\""
+        if (iri)
+            out << " iri=\"${iri.encodeAsHTML()}\""
+        if (vocabulary)
+            out << " vocabulary=\"${vocabulary.encodeAsHTML()}\""
+        if (term)
+            out << " term=\"${term.encodeAsHTML()}\""
         out << ">${text}</span>"
     }
 
@@ -330,6 +372,22 @@ class VocabularyTagLib {
     }
 
     /**
+     * Get a local name for an IRI.
+     * <p>
+     * The local name is the name without namespace information.
+     * For example <code>&lt;voc:localName iri="http://rs.tdwg.org/dwc/terms/scientificName"/&gt;</code> is <code>scienfificName</code>
+     * and <code>&lt;voc:localName iri="urn:iso639-3:xul"/&gt;</code> is <code>xule</code>.
+     * </p>
+     *
+     * @attr iri The IRI to convert to a local name
+     *
+     * @return
+     */
+    def localName = { attrs, body ->
+        out << buildLocalName(attrs.iri)
+    }
+
+    /**
      * Shortened text
      *
      * @param text The text to shorten
@@ -372,7 +430,7 @@ class VocabularyTagLib {
      * @param iri
      * @return The identifier piece of an iri, either a fragment, the last part of the path or the final part of a urn
      */
-    def localName(String iri) {
+    def buildLocalName(String iri) {
         if (!iri)
             return null
         def p = -1
@@ -395,5 +453,21 @@ class VocabularyTagLib {
      */
     def isImageStyle(style) {
         return style == 'icon' || style == 'thumbnail' || style == 'image'
+    }
+
+    /**
+     * Un-camel-case a term.
+     *
+     * @param term The term to un-camel case
+     *
+     * @return An un camel-scased term
+     *
+     * @see CamelCaseTokenizer
+     */
+    String expandCamelCase(String term) {
+        def locale = response.locale ?: request.locale ?: Locale.default
+        TitleCapitaliser capitaliser = TitleCapitaliser.create(locale.language)
+        CamelCaseTokenizer tokenizer = new CamelCaseTokenizer(term)
+        return capitaliser.capitalise(tokenizer)
     }
 }
