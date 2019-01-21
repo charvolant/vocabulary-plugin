@@ -50,27 +50,27 @@ eg `skos:Concept` rather than as the full `http://www.w3.org/2004/02/skos/core#C
 
 #### tagHeader
 
-Include `<voc:tagHeader/>` in the head of any page that will use `voc:tag` or 
-`voc:lang` tags.
+Include `<voc:tagHeader/>` in the head of any page that will use `voc:tag`, 
+`voc:language` or `voc:term` tags.
 This tag imports appropriate style sheets and gets summary information and styles for
 terms.
 
-#### tag
+#### concept
 
 This tags a term as a vocabulary element with
-`<voc:tag iri="iri" vocabulary="vocab" term="term"/>`.
-The corresponding term supplied by the service must have an RDF class of 
-`format:Tag`, along with any other classes.
+`<voc:concept iri="iri" vocabulary="vocab" concept="term" style='tag'/>`.
+The corresponding term supplied by the service should have an RDF class or subclass of 
+`format:Tag`, along with any other classes that describe the resource.
 The term and vocabulary are preferentially drawn from the `skos:notation`
 property; see the service documentation for more details.
 There are three ways of using this tag:
 
 * **iri** only. The IRI of the term, eg, `http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted`
-* **term** only. If the term is unique across all vocabularies, eg `TK NV` then
+* **concept** only. If the term is unique across all vocabularies, eg `TK NV` then
   only the term need be supplied. This form is useful for informally defined
   labels and tags but may run into problems if there is a collision in
   vocabularies.
-* **vocabulary** and **term**. The term is picked from a specific controlled vocabulary.
+* **vocabulary** and **concept**. The term is picked from a specific controlled vocabulary.
   The vocabulary is a `skos:ConceptScheme` and is labelled either by the 
   `skos:notation`, `skos:prefLabel` or `rdfs:label` properties.
   As an example, a pair might be `tkLabels/TK NV`
@@ -81,6 +81,11 @@ There are three ways of using this tag:
   below.
   
 ![Tag Term, Vocabulary and DwC Term](doc/tag.svg)
+
+The **style** attribute can be either an iri or `concept`, `language` or `term`, corresponding to
+the `format:Concept`, `format:Language` or `format:Term` classes.
+If empty, the type is assumed to be a tag until it is replaced by the appropriate styling.
+
 
 ### format
 
@@ -111,6 +116,20 @@ The parameters are as follows:
 Display a label for a [JSON-LD](#json-ld) resource or value.
 `<voc:label value="${resource}" style="image" context="${context}"/>`
 See [voc:format](#format) for an explanation of the parameters.
+
+  
+### isTag
+
+Includes the body if a particular resource is a tagged resource, capable of being displayed
+by the `voc:tag` tag.
+`<voc:isTag value="${resource}" context="${context}" style="language">This is a tag</voc:isTag>`
+The attributes are:
+
+* **value** (required) The resource (as JSON-LD) to be tested.
+* **context** (optional, defaults to pageContext.context) The JSON-LD context
+* **style** (optional) Either an IRI or one of `tag`, `language` or `term`, corresponding to
+  the `format:Tag`, 'format:Language` or `format:Term` classes. If absent, any tag class is acceptable.
+
 
 ## Additional Information
 

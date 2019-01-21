@@ -11,13 +11,13 @@ a.rdf-resource {
 /*    color: inherit; */
 }
 
-a .glyphicon-link,.glyphicon-new-window {
+a.rdf-resource .glyphicon-link,.glyphicon-new-window {
     visibility: hidden;
-    margin-left: 0.2em;
-    font-size: xx-small;
+    margin-left: 0.1em;
+    font-size: 50%;
     vertical-align: top;
 }
 
-a:hover .glyphicon-link,.glyphicon-new-window {
+a.rdf-resource:hover .glyphicon-link,.glyphicon-new-window {
     visibility: visible;
 }

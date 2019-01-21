@@ -133,6 +133,21 @@ class TitleCapitaliser {
      *
      * @return The capitalised words
      */
+    String capitalise(String[] words) {
+        StringBuffer capitalised = new StringBuffer(32)
+        for (int i = 0; i < words.length; i++) {
+            capitalise(words[i], capitalised, i == 0 || i == words.length - 1)
+        }
+        return capitalised.toString()
+    }
+
+    /**
+     * Capitalise a a likes of words according to the capitaliser rules.
+     *
+     * @param words The list of words to capitalize
+     *
+     * @return The capitalised words
+     */
     String capitalise(List<String> words) {
         StringBuffer capitalised = new StringBuffer(32)
         for (int i = 0; i < words.size(); i++) {

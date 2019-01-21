@@ -1,0 +1,407 @@
+{
+  "@language": "en",
+  "@count": 6,
+  "@graph": [
+    {
+      "@id": "http://www.ala.org.au/terms/1.0/NomenclaturalCode",
+      "@type": "owl:Class",
+      "@label": "Nomenclatural code",
+      "@shortId": "ala:NomenclaturalCode",
+      "@description": "A nomenclatural code for biological names",
+      "http://www.openrdf.org/contrib/lucenesail#score": {
+        "@value": 1.9078013,
+        "@type": "http://www.w3.org/2001/XMLSchema#float"
+      },
+      "http://www.openrdf.org/contrib/lucenesail#snippet": {
+        "@value": "A nomenclatural <B>code<\/B> for biological names"
+      },
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A nomenclatural code for biological names"
+      },
+      "rdfs:label": {
+        "@value": "Nomenclatural code"
+      },
+      "rdfs:subClassOf": "skos:Concept"
+    },
+    {
+      "@id": "http://www.ala.org.au/terms/1.0/verbatimNomenclaturalCode",
+      "@type": "rdf:Property",
+      "@label": "verbatim nomenclatural code",
+      "@shortId": "ala:verbatimNomenclaturalCode",
+      "@description": "The nomenclatural code as supplied, before processing",
+      "http://www.openrdf.org/contrib/lucenesail#score": {
+        "@value": 1.5898345,
+        "@type": "http://www.w3.org/2001/XMLSchema#float"
+      },
+      "http://www.openrdf.org/contrib/lucenesail#snippet": {
+        "@value": "The nomenclatural <B>code<\/B> as supplied, before processing"
+      },
+      "rdf:type": "rdf:Property",
+      "rdfs:comment": {
+        "@value": "The nomenclatural code as supplied, before processing"
+      },
+      "rdfs:label": {
+        "@value": "verbatim nomenclatural code"
+      },
+      "rdfs:range": "xsd:string",
+      "rdfs:seeAlso": "dwc:nomenclaturalCode"
+    },
+    {
+      "@id": "http://www.ala.org.au/terms/1.0/nomenclaturalCode/ICZN",
+      "@type": [
+        "format:Concept",
+        "ala:NomenclaturalCode"
+      ],
+      "@label": "ICZN",
+      "@shortId": "http://www.ala.org.au/terms/1.0/nomenclaturalCode/ICZN",
+      "@title": "International Code of Zoological Nomenclature",
+      "dcterms:title": {
+        "@value": "International Code of Zoological Nomenclature",
+        "@language": "en"
+      },
+      "http://www.openrdf.org/contrib/lucenesail#score": {
+        "@value": 1.5738558,
+        "@type": "http://www.w3.org/2001/XMLSchema#float"
+      },
+      "http://www.openrdf.org/contrib/lucenesail#snippet": {
+        "@value": "International <B>Code<\/B> of Zoological Nomenclature"
+      },
+      "rdf:type": [
+        "format:Concept",
+        "ala:NomenclaturalCode"
+      ],
+      "skos:inScheme": "ala:nomenclaturalCodes",
+      "skos:notation": {
+        "@value": "ICZN"
+      }
+    }
+  ],
+  "@context": {
+    "dwc": "http://rs.tdwg.org/dwc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "format": "http://www.ala.org.au/format/1.0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ala": "http://www.ala.org.au/terms/1.0/",
+    "owl:Class": {
+      "@id": "http://www.w3.org/2002/07/owl#Class",
+      "@type": "@id",
+      "@label": "Class",
+      "@shortId": "owl:Class"
+    },
+    "skos:Concept": {
+      "@id": "http://www.w3.org/2004/02/skos/core#Concept",
+      "@type": "@id",
+      "@label": "Concept",
+      "@shortId": "skos:Concept"
+    },
+    "rdf:Property": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "@type": "@id",
+      "@label": "Property",
+      "@shortId": "rdf:Property"
+    },
+    "xsd:string": {
+      "@id": "http://www.w3.org/2001/XMLSchema#string",
+      "@type": "@id",
+      "@label": "string",
+      "@shortId": "xsd:string"
+    },
+    "dwc:nomenclaturalCode": {
+      "@id": "http://rs.tdwg.org/dwc/terms/nomenclaturalCode",
+      "@type": "@id",
+      "@label": "nomenclaturalCode",
+      "@shortId": "dwc:nomenclaturalCode"
+    },
+    "format:Concept": {
+      "@id": "http://www.ala.org.au/format/1.0/Concept",
+      "@type": "owl:Class",
+      "@label": "Concept",
+      "@shortId": "format:Concept",
+      "@description": "A concept that that can be represented by a visual tag. Tags can usually be shown by a replaced image or similar graphical representarion.",
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A concept that that can be represented by a visual tag. Tags can usually be shown by a replaced image or similar graphical representarion."
+      },
+      "rdfs:label": {
+        "@value": "Concept"
+      },
+      "rdfs:subClassOf": "owl:Thing"
+    },
+    "ala:NomenclaturalCode": {
+      "@id": "http://www.ala.org.au/terms/1.0/NomenclaturalCode",
+      "@type": "owl:Class",
+      "@label": "Nomenclatural code",
+      "@shortId": "ala:NomenclaturalCode",
+      "@description": "A nomenclatural code for biological names",
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A nomenclatural code for biological names"
+      },
+      "rdfs:label": {
+        "@value": "Nomenclatural code"
+      },
+      "rdfs:subClassOf": "skos:Concept"
+    },
+    "ala:nomenclaturalCodes": {
+      "@id": "http://www.ala.org.au/terms/1.0/nomenclaturalCodes",
+      "@type": "ala:DwCVocabulary",
+      "@label": "Nomenclatural Codes",
+      "@shortId": "ala:nomenclaturalCodes",
+      "@title": "Nomenclatural Codes",
+      "@description": "The nomenclatural codes used by different branches of biology for regulating scientific names",
+      "ala:forTerm": "dwc:nomenclaturalCode",
+      "dcterms:description": {
+        "@value": "The nomenclatural codes used by different branches of biology for regulating scientific names",
+        "@language": "en"
+      },
+      "dcterms:title": {
+        "@value": "Nomenclatural Codes",
+        "@language": "en"
+      },
+      "format:backgroundColor": {
+        "@value": "#26d2d4"
+      },
+      "rdf:type": "ala:DwCVocabulary"
+    },
+    "format:LanguageType": {
+      "@id": "http://www.ala.org.au/format/1.0/LanguageType",
+      "@type": "owl:Class",
+      "@label": "Language Type",
+      "@shortId": "format:LanguageType",
+      "@description": "A general language classification",
+      "rdf:type": "owl:Class",
+      "rdfs:comment": {
+        "@value": "A general language classification",
+        "@language": "en"
+      },
+      "rdfs:label": {
+        "@value": "Language Type"
+      },
+      "rdfs:subClassOf": "skos:Concept"
+    },
+    "format:languageTypes": {
+      "@id": "http://www.ala.org.au/format/1.0/languageTypes",
+      "@type": "skos:ConceptScheme",
+      "@label": "Language Types",
+      "@shortId": "format:languageTypes",
+      "@description": "The vocabulary for classifying languages",
+      "rdf:type": "skos:ConceptScheme",
+      "rdfs:comment": {
+        "@value": "The vocabulary for classifying languages"
+      },
+      "rdfs:label": {
+        "@value": "Language Types"
+      }
+    },
+    "http://www.ala.org.au/format/1.0/categories/structure": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/structure",
+      "@type": "format:Category",
+      "@label": "Structure",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/structure",
+      "@title": "Structure",
+      "@description": "Information about the structure of class or property",
+      "dcterms:description": {
+        "@value": "Information about the structure of class or property"
+      },
+      "dcterms:title": {
+        "@value": "Structure"
+      },
+      "format:priority": {
+        "@value": 600,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/description": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/description",
+      "@type": "format:Category",
+      "@label": "Description",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/description",
+      "@title": "Description",
+      "@description": "Descriptive information: labels, titles, description etc.",
+      "dcterms:description": {
+        "@value": "Descriptive information: labels, titles, description etc."
+      },
+      "dcterms:title": {
+        "@value": "Description"
+      },
+      "format:priority": {
+        "@value": 1000,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/other": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/other",
+      "@type": "format:Category",
+      "@label": "Other",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/other",
+      "@title": "Other",
+      "@description": "The default, other category",
+      "dcterms:description": {
+        "@value": "The default, other category"
+      },
+      "dcterms:title": {
+        "@value": "Other"
+      },
+      "format:priority": {
+        "@value": 0,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/vocabulary": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "@type": "format:Category",
+      "@label": "Vocabulary",
+      "@shortId": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "@title": "Vocabulary",
+      "@description": "Vocabulary information, such as broader/narrower terms, schemes etc.",
+      "dcterms:description": {
+        "@value": "Vocabulary information, such as broader/narrower terms, schemes etc."
+      },
+      "dcterms:title": {
+        "@value": "Vocabulary"
+      },
+      "format:priority": {
+        "@value": 900,
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "rdf:type": "format:Category"
+    },
+    "rdf:type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id",
+      "@label": "type",
+      "@shortId": "rdf:type",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "dcterms:description": {
+      "@id": "http://purl.org/dc/terms/description",
+      "@type": "@id",
+      "@label": "description",
+      "@shortId": "dcterms:description",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "rdfs:comment": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#comment",
+      "@type": "@id",
+      "@label": "comment",
+      "@shortId": "rdfs:comment",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "rdfs:label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type": "@id",
+      "@label": "label",
+      "@shortId": "rdfs:label",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:title"
+    },
+    "dcterms:title": {
+      "@id": "http://purl.org/dc/terms/title",
+      "@type": "@id",
+      "@label": "title",
+      "@shortId": "dcterms:title",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:description"
+    },
+    "rdfs:subClassOf": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      "@type": "@id",
+      "@label": "subClassOf",
+      "@shortId": "rdfs:subClassOf",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure"
+    },
+    "http://www.openrdf.org/contrib/lucenesail#score": {
+      "@id": "http://www.openrdf.org/contrib/lucenesail#score",
+      "@type": "@id",
+      "@label": "score",
+      "@shortId": "http://www.openrdf.org/contrib/lucenesail#score"
+    },
+    "http://www.openrdf.org/contrib/lucenesail#snippet": {
+      "@id": "http://www.openrdf.org/contrib/lucenesail#snippet",
+      "@type": "@id",
+      "@label": "snippet",
+      "@shortId": "http://www.openrdf.org/contrib/lucenesail#snippet"
+    },
+    "rdfs:range": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#range",
+      "@type": "@id",
+      "@label": "range",
+      "@shortId": "rdfs:range",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure",
+      "format:comesAfter": "rdfs:domain"
+    },
+    "rdfs:domain": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#domain",
+      "@type": "@id",
+      "@label": "domain",
+      "@shortId": "rdfs:domain",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure"
+    },
+    "rdfs:seeAlso": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#seeAlso",
+      "@type": "@id",
+      "@label": "seeAlso",
+      "@shortId": "rdfs:seeAlso",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "skos:inScheme": {
+      "@id": "http://www.w3.org/2004/02/skos/core#inScheme",
+      "@type": "@id",
+      "@label": "inScheme",
+      "@shortId": "skos:inScheme",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
+    },
+    "skos:notation": {
+      "@id": "http://www.w3.org/2004/02/skos/core#notation",
+      "@type": "@id",
+      "@label": "notation",
+      "@shortId": "skos:notation",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "skos:altLabel": {
+      "@id": "http://www.w3.org/2004/02/skos/core#altLabel",
+      "@type": "@id",
+      "@label": "altLabel",
+      "@shortId": "skos:altLabel",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "rdfs:label"
+    },
+    "skos:definition": {
+      "@id": "http://www.w3.org/2004/02/skos/core#definition",
+      "@type": "@id",
+      "@label": "definition",
+      "@shortId": "skos:definition",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": [
+        "dcterms:description",
+        "rdfs:comment"
+      ],
+      "format:comesBefore": "skos:note"
+    },
+    "skos:note": {
+      "@id": "http://www.w3.org/2004/02/skos/core#note",
+      "@type": "@id",
+      "@label": "note",
+      "@shortId": "skos:note",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": "dcterms:description"
+    },
+    "skos:example": {
+      "@id": "http://www.w3.org/2004/02/skos/core#example",
+      "@type": "@id",
+      "@label": "example",
+      "@shortId": "skos:example",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
+    }
+  }
+}

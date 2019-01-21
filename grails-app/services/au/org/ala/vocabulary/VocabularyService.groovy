@@ -5,6 +5,7 @@ import grails.core.support.GrailsConfigurationAware
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import groovy.json.JsonSlurper
+import org.grails.encoder.Encoder
 import org.springframework.http.HttpStatus
 
 /**
@@ -39,6 +40,20 @@ class VocabularyService implements GrailsConfigurationAware {
      */
     def listResources(String type, int offset, int max, Locale locale) {
         return service("${service}/resource?type={type}&offset={offset}&max={max}", [type: type, offset: offset, max: max], locale)
+    }
+
+    /**
+     * Search for text in resources
+     *
+     * @param q The query text
+     * @param offset The starting point for the list
+     * @param max The maximum number of type to return
+     * @param locale The request locale for correct language-specific labelling
+     *
+     * @return A list of matching resources in JSON-LD form (using the @graph entry for a list, with search:score and search:snippet added)
+     */
+    def search(String q, int offset, int max, Locale locale) {
+        return service("${service}/resource/search?q={q}&offset={offset}&max={max}", [q: q, offset: offset, max: max], locale)
     }
 
     /**

@@ -115,6 +115,36 @@ class VocabularyServiceSpec extends Specification implements ServiceUnitTest<Voc
         server.verify()
     }
 
+    def 'test search 1'() {
+        given:
+        server.expectations {
+            get('/resource/search') {
+                query('q', 'code')
+                query('offset', '0')
+                query('max', '3')
+                header('Accept-Language', 'en-GB')
+                called(1)
+                responder {
+                    encoder(ContentType.APPLICATION_JSON, Map, Encoders.json)
+                    code(200)
+                    body(getResponse('search-1.json'), ContentType.APPLICATION_JSON)
+                }
+            }
+        }
+        when:
+        service.service = server.httpUrl
+        def json = service.search('code', 0, 3, locale)
+        then:
+        json
+        json['@language'] == 'en'
+        json['@count'] == 6
+        json['@graph']
+        json['@graph'].size() == 3
+        json['@context']
+        and:
+        server.verify()
+    }
+
     def 'test getResource 1'() {
         given:
         server.expectations {

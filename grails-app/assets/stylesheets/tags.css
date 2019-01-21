@@ -1,12 +1,20 @@
 /* Static tag shapes an information */
 
+.tag-holder {
+    display: inline-block;
+    border: thin dotted #a9a9a9;
+    border-radius: 0.5ex;
+}
+
 a.tag-concept {
     color: inherit;
 }
 
 .tag-concept {
     display: inline-block;
+    font-size: smaller;
     padding: 0.2ex 1.0ex 0.2ex 1.5ex;
+    border: thin solid #a9a9a9;
     border-radius: 1.5ex 0.5ex 0.5ex 1.5ex;
 }
 
@@ -22,7 +30,16 @@ a.tag-language {
 
 .tag-language {
     display: inline-block;
+    font-size: smaller;
     padding: 0.2ex 1.0ex 0.2ex 1.5ex;
     background-color: #93d8c1;
     clip-path: polygon(0 25%, 1ex 0, 100% 0, 100% 100%, 1ex 100%, 0 75%);
+}
+
+a.tag-icon {
+    color: inherit;
+}
+
+.tag-icon {
+    display: inline-block;
 }

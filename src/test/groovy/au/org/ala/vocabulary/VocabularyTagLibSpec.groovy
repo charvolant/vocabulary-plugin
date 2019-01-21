@@ -35,52 +35,6 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         tagLib.contract(concept, context) == concept
     }
 
-    def 'test shorten 1'() {
-        given:
-        def text = "This is too short"
-        expect:
-        tagLib.shorten(text) == text
-    }
-
-    def 'test shorten 2'() {
-        given:
-        def text = "This is a lot longer. A lot, lot longer in fact"
-        expect:
-        tagLib.shorten(text, 12) == text.substring(0, 10) + "…"
-    }
-
-    def 'test shorten 3'() {
-        given:
-        def text = "blah " * 100
-        expect:
-        tagLib.shorten(text) == text.substring(0, 100) + "…"
-    }
-
-    def 'test localName 1'() {
-        expect:
-        tagLib.buildLocalName('http://www.ala.org.au/format/1.0/style/icon') == 'icon'
-    }
-
-    def 'test localName 2'() {
-        expect:
-        tagLib.buildLocalName('http://www.w3.org/2004/02/skos/core#Concept') == 'Concept'
-    }
-
-    def 'test localName 3'() {
-        expect:
-        tagLib.buildLocalName('urn:ietf:rfc:2648') == '2648'
-    }
-
-    def 'test localName 4'() {
-        expect:
-        tagLib.buildLocalName('') == null
-    }
-
-    def 'test localName 5'() {
-        expect:
-        tagLib.buildLocalName('sweet-william') == 'sweet-william'
-    }
-
     def 'test expandCamelCase 1'() {
         expect:
         tagLib.expandCamelCase('hello') == 'Hello'
@@ -135,6 +89,20 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         tagLib.expandCamelCase('iso639-1') == 'Iso 639-1'
     }
 
+    def 'test shortCode 1'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:shortCode iri="http://www.w3.org/2004/02/skos/core#Concept"/>', model) == 'skos:Concept'
+    }
+
+    def 'test shortCode 2'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:shortCode iri="http://www.ala.org.au"/>', model) == 'http://www.ala.org.au'
+    }
+
     def 'test voc:tagHeader 1'() {
         given:
         tagLib.metaClass.assetPath = { map ->
@@ -144,69 +112,54 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         applyTemplate('<voc:tagHeader/>') == '<link rel="stylesheet" href="https://voc.ala.org.au/ws/tag/css"/><link rel="stylesheet" href="/asset/vocabulary.css"/><link rel="stylesheet" href="/asset/tags.css"/><script src="https://voc.ala.org.au/ws/tag/js"></script><script src="/asset/tags.js"></script><script type="text/javascript">$(document).ready(function() {  load_tags(\'https://voc.ala.org.au/vocabulary/show\');});</script>'
     }
 
-    def 'test voc:tag 1'() {
+    def 'test voc:concept 1'() {
         expect:
-        applyTemplate('<voc:tag iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder tag-concept" iri="urn:ietf:rfc:2648">2648</span>'
+        applyTemplate('<voc:concept iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder tag-concept" iri="urn:ietf:rfc:2648">2648</span>'
     }
 
-    def 'test voc:tag 2'() {
+    def 'test voc:concept 2'() {
         expect:
-        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">Icon</span>'
+        applyTemplate('<voc:concept iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">Icon</span>'
     }
 
-    def 'test voc:tag 3'() {
+    def 'test voc:concept 3'() {
         expect:
-        applyTemplate('<voc:tag concept="TK NV"/>') == '<span class="tag-holder tag-concept" concept="TK NV">TK NV</span>'
+        applyTemplate('<voc:concept concept="TK NV"/>') == '<span class="tag-holder tag-concept" concept="TK NV">TK NV</span>'
     }
 
-    def 'test voc:tag 4'() {
+    def 'test voc:concept 4'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="tkLabels" concept="TK NV"/>') == '<span class="tag-holder tag-concept" vocabulary="tkLabels" concept="TK NV">TK NV</span>'
+        applyTemplate('<voc:concept vocabulary="tkLabels" concept="TK NV"/>') == '<span class="tag-holder tag-concept" vocabulary="tkLabels" concept="TK NV">TK NV</span>'
     }
 
-    def 'test voc:tag 5'() {
+    def 'test voc:concept 5'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">Unknown</span>'
+        applyTemplate('<voc:concept vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">Unknown</span>'
     }
 
-    def 'test voc:lang 1'() {
+    def 'test voc:concept 6'() {
         expect:
-        applyTemplate('<voc:language iri="urn:iso639-1:de"/>') == '<span class="language-holder tag-language" iri="urn:iso639-1:de">de</span>'
+        applyTemplate('<voc:concept iri="urn:iso639-1:de" style="language"/>') == '<span class="tag-holder tag-language" iri="urn:iso639-1:de">de</span>'
     }
 
-    def 'test voc:lang 2'() {
+    def 'test voc:concept 7'() {
         expect:
-        applyTemplate('<voc:language iri="http://www.ala.org.au/language/1.0/iso639-3/eng"/>') == '<span class="language-holder tag-language" iri="http://www.ala.org.au/language/1.0/iso639-3/eng">eng</span>'
+        applyTemplate('<voc:concept concept="akk" style="language"/>') == '<span class="tag-holder tag-language" concept="akk">akk</span>'
     }
 
-    def 'test voc:lang 3'() {
+    def 'test voc:concept 8'() {
         expect:
-        applyTemplate('<voc:language lang="akk"/>') == '<span class="language-holder tag-language" lang="akk">akk</span>'
+        applyTemplate('<voc:concept iri="http://purl.org/dc/terms/accessRights" style="term"/>') == '<span class="tag-holder tag-term" iri="http://purl.org/dc/terms/accessRights">Access Rights</span>'
     }
 
-    def 'test voc:term 1'() {
+    def 'test voc:concept 9'() {
         expect:
-        applyTemplate('<voc:term iri="urn:iso639-1:de"/>') == '<span class="term-holder tag-term" iri="urn:iso639-1:de">De</span>'
+        applyTemplate('<voc:concept iri="http://rs.tdwg.org/dwc/terms/occurrenceID" style="term"/>') == '<span class="tag-holder tag-term" iri="http://rs.tdwg.org/dwc/terms/occurrenceID">Occurrence ID</span>'
     }
 
-    def 'test voc:term 2'() {
+    def 'test voc:concept 10'() {
         expect:
-        applyTemplate('<voc:term iri="http://purl.org/dc/terms/accessRights"/>') == '<span class="term-holder tag-term" iri="http://purl.org/dc/terms/accessRights">Access Rights</span>'
-    }
-
-    def 'test voc:term 3'() {
-        expect:
-        applyTemplate('<voc:term iri="http://rs.tdwg.org/dwc/terms/occurrenceID"/>') == '<span class="term-holder tag-term" iri="http://rs.tdwg.org/dwc/terms/occurrenceID">Occurrence ID</span>'
-    }
-
-    def 'test voc:term 4'() {
-        expect:
-        applyTemplate('<voc:term vocabulary="dwc" term="occurrenceID"/>') == '<span class="term-holder tag-term" vocabulary="dwc" term="occurrenceID">Occurrence ID</span>'
-    }
-
-    def 'test voc:term 5'() {
-        expect:
-        applyTemplate('<voc:term term="occurrenceID"/>') == '<span class="term-holder tag-term" term="occurrenceID">Occurrence ID</span>'
+        applyTemplate('<voc:concept vocabulary="dwc" concept="occurrenceID" style="term"/>') == '<span class="tag-holder tag-term" vocabulary="dwc" concept="occurrenceID">Occurrence ID</span>'
     }
 
     def 'test voc:label 1'() {
@@ -393,31 +346,99 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test voc:format 10'() {
         given:
+        def model = makeLd4()
+        expect:
+        applyTemplate('<voc:format value="${resource}" language="true"/>', model) == '<span lang="en">A String&nbsp;<span class="tag-holder tag-language" concept="en">en</span></span>'
+    }
+
+    def 'test voc:format 11'() {
+        given:
         def model = makeLd5()
         expect:
         applyTemplate('<voc:format value="${resource}"/>', model) == '100'
     }
 
-    def 'test voc:format 11'() {
+    def 'test voc:format 12'() {
         given:
         def model = makeLd6()
         expect:
         applyTemplate('<voc:format value="${resource}"/>', model) == '2019-01-02T10:00:00+11:00'
     }
 
-    def 'test voc:format 12'() {
+    def 'test voc:format 13'() {
         given:
         def model = makeLd7()
         expect:
         applyTemplate('<voc:format value="${resource}"/>', model) == '<ol class="rdf-list"><li>Item 1</li><li>Item 2</li></ol>'
     }
 
-    def 'test voc:format 13'() {
+    def 'test voc:format 14'() {
         given:
         def model = makeLd7()
         model.resource.remove(1)
         expect:
         applyTemplate('<voc:format value="${resource}"/>', model) == 'Item 1'
+    }
+
+    def 'test voc:isTag 1'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isTag value="${resource}">I See You</voc:isTag>', model) == ''
+    }
+
+    def 'test voc:isTag 2'() {
+        given:
+        def model = makeLd8()
+        model.resource.'rdf:type' << 'format:Concept'
+        expect:
+        applyTemplate('<voc:isTag value="${resource}">I See You</voc:isTag>', model) == 'I See You'
+    }
+
+    def 'test voc:isTag 3'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isTag value="${resource}" tag="language">I See You</voc:isTag>', model) == ''
+    }
+
+    def 'test voc:isTag 4'() {
+        given:
+        def model = makeLd8()
+        model.resource.'rdf:type' << 'format:Concept'
+        expect:
+        applyTemplate('<voc:isTag value="${resource}" style="language">I See You</voc:isTag>', model) == ''
+    }
+
+    def 'test voc:isTag 5'() {
+        given:
+        def model = makeLd8()
+        model.resource.'rdf:type' << 'format:Language'
+        expect:
+        applyTemplate('<voc:isTag value="${resource}" style="language">I See You</voc:isTag>', model) == 'I See You'
+    }
+
+    def 'test voc:isTag 6'() {
+        given:
+        def model = makeLd8()
+        model.resource.'rdf:type' << 'format:Language'
+        expect:
+        applyTemplate('<voc:isTag value="${resource}" style="http://www.ala.org.au/format/1.0/Language">I See You</voc:isTag>', model) == 'I See You'
+    }
+
+    def 'test voc:isTag 7'() {
+        given:
+        def model = makeLd8()
+         expect:
+        applyTemplate('<voc:isTag value="${resource}" style="term">I See You</voc:isTag>', model) == ''
+    }
+
+    def 'test voc:isTag 8'() {
+        given:
+        def model = makeLd8()
+        model.resource.'rdf:type' << 'format:Term'
+        expect:
+        applyTemplate('<voc:isTag value="${resource}" style="term">I See You</voc:isTag>', model) == 'I See You'
     }
 
     def makeLd1() {
@@ -475,6 +496,18 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
                 [ '@value': 'Item 2'],
         ]
         def context = [:]
+        def model = [resource: resource, context: context]
+        return model
+    }
+
+    def makeLd8() {
+        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', '@shortId': 'ts:accepted', '@label': 'accepted', '@title': 'Accepted', '@description': 'A description', 'rdf:type': [ 'skos:Concept']]
+        def rdfType = [ '@id': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '@shortId': 'rdf:type']
+        def skosConcept = [ '@id': 'http://www.w3.org/2004/02/skos/core#Concept', '@shortId': 'skos:Concept']
+        def formatConcept = [ '@id': 'http://www.ala.org.au/format/1.0/Concept', '@shortId': 'format:Concept']
+        def formatLanguage = [ '@id': 'http://www.ala.org.au/format/1.0/Language', '@shortId': 'format:Language']
+        def formatTerm = [ '@id': 'http://www.ala.org.au/format/1.0/Term', '@shortId': 'format:Term']
+        def context = [ts: 'http://www.ala.org.au/terms/1.0/taxonomicStatus', 'rdf:type': rdfType, 'skos:Concept': skosConcept, 'format:Concept': formatConcept, 'format:Language': formatLanguage, 'format:Term': formatTerm]
         def model = [resource: resource, context: context]
         return model
     }
