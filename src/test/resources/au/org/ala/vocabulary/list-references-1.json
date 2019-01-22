@@ -8,10 +8,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "accepted",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted",
-      "@title": "Accepted",
-      "@description": "A currently accepted taxon.",
       "dcterms:description": {
         "@value": "A currently accepted taxon.",
         "@language": "en"
@@ -39,10 +35,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "heterotypicSynonym",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/heterotypicSynonym",
-      "@title": "Heterotypic Synonym",
-      "@description": "A taxonomic synonym, meaning that a species that was originally considered to be separate has been lumped into another species. Whether they are synonymns or not is a matter of opinion.",
       "dcterms:description": {
         "@value": "A taxonomic synonym, meaning that a species that was originally considered to be separate has been lumped into another species. Whether they are synonymns or not is a matter of opinion.",
         "@language": "en"
@@ -72,10 +64,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "homotypicSynonym",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/homotypicSynonym",
-      "@title": "Homotypic Synonym",
-      "@description": "A nomenclatural synonym, meaning that the same taxon has gone under a different name. This can occur when two people describe the same species.",
       "dcterms:description": {
         "@value": "A nomenclatural synonym, meaning that the same taxon has gone under a different name. This can occur when two people describe the same species.",
         "@language": "en"
@@ -113,9 +101,6 @@
     "format:Tag": {
       "@id": "http://www.ala.org.au/format/1.0/Tag",
       "@type": "owl:Class",
-      "@label": "Tag",
-      "@shortId": "format:Tag",
-      "@description": "Something that can be represented by a visual tag. Tags can usually be shown by a replaced image or similar graphical representarion.",
       "rdf:type": "owl:Class",
       "rdfs:comment": {
         "@value": "Something that can be represented by a visual tag. Tags can usually be shown by a replaced image or similar graphical representarion."
@@ -128,9 +113,6 @@
     "ala:TaxonomicStatus": {
       "@id": "http://www.ala.org.au/terms/1.0/TaxonomicStatus",
       "@type": "owl:Class",
-      "@label": "Taxonomic Status",
-      "@shortId": "ala:TaxonomicStatus",
-      "@description": "A specific taxonomic status term used to describe the relationship between a taxon or name and other taxa.",
       "ala:forTerm": "dwc:taxonomicStatus",
       "rdf:type": "owl:Class",
       "rdfs:comment": {
@@ -145,9 +127,6 @@
     "ala:taxonomicStatuses": {
       "@id": "http://www.ala.org.au/terms/1.0/taxonomicStatuses",
       "@type": "ala:DwCVocabulary",
-      "@label": "taxonomicStatuses",
-      "@shortId": "ala:taxonomicStatuses",
-      "@description": "The taxonomic status vocabulary used by the ALA",
       "ala:forTerm": "dwc:taxonomicStatus",
       "format:backgroundColor": {
         "@value": "#5ec6cc"
@@ -172,10 +151,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "synonym",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/synonym",
-      "@title": "Synonym",
-      "@description": "A synonym, meaning that a taxon by this name have been reassigned to other taxa.",
       "dcterms:description": {
         "@value": "A synonym, meaning that a taxon by this name have been reassigned to other taxa.",
         "@language": "en"
@@ -199,10 +174,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "subjectiveSynonym",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/subjectiveSynonym",
-      "@title": "Subjective Synonym",
-      "@description": "A taxonomic synonym, meaning that a species that was originally considered to be separate has been lumped into another species. Whether they are synonymns or not is a matter of opinion.",
       "dcterms:description": {
         "@value": "A taxonomic synonym, meaning that a species that was originally considered to be separate has been lumped into another species. Whether they are synonymns or not is a matter of opinion.",
         "@language": "en"
@@ -232,9 +203,6 @@
         "format:Tag",
         "ala:NomenclaturalCode"
       ],
-      "@label": "ICN",
-      "@shortId": "http://www.ala.org.au/terms/1.0/nomenclaturalCode/ICN",
-      "@title": "International Code of Nomenclature for algae, fungi, and plants",
       "dcterms:title": {
         "@value": "International Code of Nomenclature for algae, fungi, and plants",
         "@language": "en"
@@ -262,10 +230,6 @@
         "format:Tag",
         "ala:TaxonomicStatus"
       ],
-      "@label": "objectiveSynonym",
-      "@shortId": "http://www.ala.org.au/terms/1.0/taxonomicStatus/objectiveSynonym",
-      "@title": "Objective Synonym",
-      "@description": "A nomenclatural synonym, meaning that the same taxon has gone under a different name. This can occur when two people describe the same species.",
       "dcterms:description": {
         "@value": "A nomenclatural synonym, meaning that the same taxon has gone under a different name. This can occur when two people describe the same species.",
         "@language": "en"
@@ -292,10 +256,6 @@
     "http://www.ala.org.au/format/1.0/categories/description": {
       "@id": "http://www.ala.org.au/format/1.0/categories/description",
       "@type": "format:Category",
-      "@label": "description",
-      "@shortId": "http://www.ala.org.au/format/1.0/categories/description",
-      "@title": "Description",
-      "@description": "Descriptive information: labels, titles, description etc.",
       "dcterms:description": {
         "@value": "Descriptive information: labels, titles, description etc."
       },
@@ -311,10 +271,6 @@
     "http://www.ala.org.au/format/1.0/categories/vocabulary": {
       "@id": "http://www.ala.org.au/format/1.0/categories/vocabulary",
       "@type": "format:Category",
-      "@label": "vocabulary",
-      "@shortId": "http://www.ala.org.au/format/1.0/categories/vocabulary",
-      "@title": "Vocabulary",
-      "@description": "Vocabulary information, such as broader/narrower terms, schemes etc.",
       "dcterms:description": {
         "@value": "Vocabulary information, such as broader/narrower terms, schemes etc."
       },
@@ -330,83 +286,61 @@
     "rdf:type": {
       "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       "@type": "@id",
-      "@label": "type",
-      "@shortId": "rdf:type",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description",
       "format:comesAfter": "dcterms:description"
     },
     "dcterms:description": {
       "@id": "http://purl.org/dc/terms/description",
       "@type": "@id",
-      "@label": "description",
-      "@shortId": "dcterms:description",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description"
     },
     "dcterms:title": {
       "@id": "http://purl.org/dc/terms/title",
       "@type": "@id",
-      "@label": "title",
-      "@shortId": "dcterms:title",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description",
       "format:comesBefore": "dcterms:description"
     },
     "skos:inScheme": {
       "@id": "http://www.w3.org/2004/02/skos/core#inScheme",
       "@type": "@id",
-      "@label": "inScheme",
-      "@shortId": "skos:inScheme",
       "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
     },
     "skos:notation": {
       "@id": "http://www.w3.org/2004/02/skos/core#notation",
       "@type": "@id",
-      "@label": "notation",
-      "@shortId": "skos:notation",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description"
     },
     "skos:note": {
       "@id": "http://www.w3.org/2004/02/skos/core#note",
       "@type": "@id",
-      "@label": "note",
-      "@shortId": "skos:note",
       "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
       "format:comesAfter": "dcterms:description"
     },
     "skos:altLabel": {
       "@id": "http://www.w3.org/2004/02/skos/core#altLabel",
       "@type": "@id",
-      "@label": "altLabel",
-      "@shortId": "skos:altLabel",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description",
       "format:comesAfter": "rdfs:label"
     },
     "rdfs:label": {
       "@id": "http://www.w3.org/2000/01/rdf-schema#label",
       "@type": "@id",
-      "@label": "label",
-      "@shortId": "rdfs:label",
       "format:category": "http://www.ala.org.au/format/1.0/categories/description",
       "format:comesBefore": "dcterms:title"
     },
     "skos:broader": {
       "@id": "http://www.w3.org/2004/02/skos/core#broader",
       "@type": "@id",
-      "@label": "broader",
-      "@shortId": "skos:broader",
       "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
     },
     "skos:closeMatch": {
       "@id": "http://www.w3.org/2004/02/skos/core#closeMatch",
       "@type": "@id",
-      "@label": "closeMatch",
-      "@shortId": "skos:closeMatch",
       "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
     },
     "skos:related": {
       "@id": "http://www.w3.org/2004/02/skos/core#related",
       "@type": "@id",
-      "@label": "related",
-      "@shortId": "skos:related",
       "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
     }
   },

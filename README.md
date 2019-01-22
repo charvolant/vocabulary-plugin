@@ -99,9 +99,9 @@ The parameters are as follows:
 * **value** (required) The value to format.
 * **class** A CSS class to use when displaying the value. Defaults to `rdf-resource`.
 * **style** How to display the value. The style attribute can have the following values:
-  * *label* Choose the supplied @label, which is usually the `skos:prefLabel` or `rdfs:label`, if not that then use the @shortId or the @id
-  * *id* Choose the supplied @shortId, which is a namespaced identifier or the @id
-  * *title* Choose the supplied @title, followed by the @label, @shortId and @id
+  * *label* Choose the supplied label, which is usually the `skos:prefLabel` or `rdfs:label`, if not that then use the shortId or the @id
+  * *id* Choose the supplied shortId, which is a namespaced identifier or the @id
+  * *title* Choose the supplied title, followed by the label, shortId and @id
   * *long* Always show the long @id
   * *image* Display an image as an full-size image
   * *thumbnail* Display an image as a thumbnail with a link to the full size image
@@ -110,6 +110,7 @@ The parameters are as follows:
   via the `format:style` annotation of that property.
 * **context** The JSON-LD @context of the value. If absent, a `pageScope.context` variable
   is used.
+* **language** If true literals with a language are language-tagged
 
 ### label
 

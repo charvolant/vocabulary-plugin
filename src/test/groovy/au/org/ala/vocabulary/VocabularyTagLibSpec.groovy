@@ -171,7 +171,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:label value="${resource}"/>', model) == '<span title="Accepted\r' +
+        applyTemplate('<voc:label value="${resource}"/>', model) == '<span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">accepted</span>'
     }
@@ -180,7 +180,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:label value="${resource}" style="label"/>', model) == '<span title="Accepted\r' +
+        applyTemplate('<voc:label value="${resource}" style="label"/>', model) == '<span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">accepted</span>'
     }
@@ -189,7 +189,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:label value="${resource}" style="id"/>', model) == '<span title="Accepted\r' +
+        applyTemplate('<voc:label value="${resource}" style="id"/>', model) == '<span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">ts:accepted</span>'
     }
@@ -197,9 +197,9 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
     def 'test voc:label 5'() {
         given:
         def model = makeLd1()
-        model.resource['@shortId'] = null
+        model.context['ts'] = null
         expect:
-        applyTemplate('<voc:label value="${resource}" style="id"/>', model) == '<span title="Accepted\r' +
+        applyTemplate('<voc:label value="${resource}" style="id"/>', model) == '<span title="Accepted Title\r' +
                 'A description">http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted</span>'
     }
 
@@ -209,13 +209,13 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         expect:
         applyTemplate('<voc:label value="${resource}" style="title"/>', model) == '<span title="' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
-                'A description">Accepted</span>'
+                'A description">Accepted Title</span>'
     }
 
     def 'test voc:label 7'() {
         given:
         def model = makeLd1()
-        model.resource['@title'] = null
+        model.resource.remove('dcterms:title')
         expect:
         applyTemplate('<voc:label value="${resource}" style="title"/>', model) == '<span title="' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
@@ -226,7 +226,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:label value="${resource}" style="long"/>', model) == '<span title="Accepted\r' +
+        applyTemplate('<voc:label value="${resource}" style="long"/>', model) == '<span title="Accepted Title\r' +
                 'A description">http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted</span>'
     }
 
@@ -234,7 +234,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd2()
         expect:
-        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="image"/>', model) == '<img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="image"/>', model) == '<img width="48" width="24" title="Accepted Icon\r' +
                 '&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://localhost/accepted.png">'
     }
 
@@ -243,14 +243,14 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         def model = makeLd2()
         model.context['http://www.ala.org.au/icon/accepted.png']['format:asset'] = null
         expect:
-        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="image"/>', model) == '<img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="image"/>', model) == '<img width="48" width="24" title="Accepted Icon\r' +
                 '&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://www.ala.org.au/icon/accepted.png">'
     }
 
     def 'test voc:label 11'() {
         given:
         def model = makeLd2()
-        model.context['http://www.ala.org.au/icon/accepted.png']['@title'] = null
+        model.context['http://www.ala.org.au/icon/accepted.png']['dcterms:title'] = null
         expect:
         applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="image"/>', model) == '<img width="48" width="24" title="&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://localhost/accepted.png">'
     }
@@ -259,7 +259,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd2()
         expect:
-        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="thumbnail"/>', model) == '<img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="thumbnail"/>', model) == '<img width="48" width="24" title="Accepted Icon\r' +
                 '&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://localhost/accepted.png">'
     }
 
@@ -267,7 +267,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd2()
         expect:
-        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="icon"/>', model) == '<img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:label value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="icon"/>', model) == '<img width="48" width="24" title="Accepted Icon\r' +
                 '&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://localhost/accepted.png">'
     }
 
@@ -280,7 +280,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:format value="${resource}"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="Accepted\r' +
+        applyTemplate('<voc:format value="${resource}"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">accepted<span class="glyphicon glyphicon-link"></span></span></a>'
     }
@@ -289,7 +289,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:format value="${resource}" class="test"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="test"><span title="Accepted\r' +
+        applyTemplate('<voc:format value="${resource}" class="test"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="test"><span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">accepted<span class="glyphicon glyphicon-link"></span></span></a>'
     }
@@ -298,7 +298,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd1()
         expect:
-        applyTemplate('<voc:format value="${resource}" style="id"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="Accepted\r' +
+        applyTemplate('<voc:format value="${resource}" style="id"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="Accepted Title\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
                 'A description">ts:accepted<span class="glyphicon glyphicon-link"></span></span></a>'
     }
@@ -307,7 +307,7 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd2()
         expect:
-        applyTemplate('<voc:format value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="icon"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Ficon%2Faccepted.png" class="rdf-resource"><img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:format value="${context[\'http://www.ala.org.au/icon/accepted.png\']}" style="icon"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Ficon%2Faccepted.png" class="rdf-resource"><img width="48" width="24" title="Accepted Icon\r' +
                 '&lt;http://www.ala.org.au/icon/accepted.png&gt;" src="http://localhost/accepted.png"></a>'
     }
 
@@ -315,9 +315,9 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         given:
         def model = makeLd2()
         expect:
-        applyTemplate('<voc:format value="${resource}" style="icon"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><img width="48" width="24" title="Accepted\r' +
+        applyTemplate('<voc:format value="${resource}" style="icon"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><img width="48" width="24" title="Accepted Thing\r' +
                 '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
-                'A description" src="http://localhost/accepted.png"></a>'
+                'A descriptive bit" src="http://localhost/accepted.png"></a>'
     }
 
     def 'test voc:format 7'() {
@@ -325,9 +325,9 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         def model = makeLd2()
         model.context = null
         expect:
-        applyTemplate('<voc:format value="${resource}"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="Accepted\r' +
-                '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;\r' +
-                'A description">accepted<span class="glyphicon glyphicon-link"></span></span></a>'
+        applyTemplate('<voc:format value="${resource}"/>', model) == '<a href="https://voc.ala.org.au/vocabulary/show?iri=http%3A%2F%2Fwww.ala.org.au%2Fterms%2F1.0%2FtaxonomicStatus%2Faccepted" class="rdf-resource"><span title="' +
+                '&lt;http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted&gt;' +
+                '">accepted<span class="glyphicon glyphicon-link"></span></span></a>'
     }
 
     def 'test voc:format 8'() {
@@ -441,24 +441,39 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         applyTemplate('<voc:isTag value="${resource}" style="term">I See You</voc:isTag>', model) == 'I See You'
     }
 
+    def makeContext1() {
+        return [
+                'ts': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/',
+                'rdf:type': ['@id': VocabularyTagLib.TYPE ],
+                'rdfs:label': ['@id': VocabularyTagLib.LABEL ],
+                'skos:preLabel':  ['@id': VocabularyTagLib.PREF_LABEL ],
+                'dcterms:title': [ '@id': VocabularyTagLib.TITLE],
+                'dcterms:description': [ '@id': VocabularyTagLib.DESCRIPTION],
+                'dc:description': [ '@id': VocabularyTagLib.DC_DESCRIPTION ]
+        ]
+    }
+
+    def makeContext2() {
+        def context = makeContext1()
+        context['format:Image'] = [ '@id': 'http://www.ala.org.au/format/1.0/Image']
+        context['format:icon'] = [ '@id': 'http://www.ala.org.au/format/1.0/icon']
+        context['format:width'] = [ '@id': 'http://www.ala.org.au/format/1.0/width']
+        context['format:height'] = [ '@id': 'http://www.ala.org.au/format/1.0/height']
+        context['format:asset'] = [ '@id': 'http://www.ala.org.au/format/1.0/asset']
+        context['http://www.ala.org.au/icon/accepted.png'] = ['@id': 'http://www.ala.org.au/icon/accepted.png', 'dcterms:title': 'Accepted Icon', 'rdf:type': 'format:Image', 'format:width': [ '@value': '48'], 'format:height': [ '@value': '24'], 'format:asset': 'http://localhost/accepted.png']
+        return context
+    }
+
     def makeLd1() {
-        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', '@shortId': 'ts:accepted', '@label': 'accepted', '@title': 'Accepted', '@description': 'A description']
-        def context = [ts: 'http://www.ala.org.au/terms/1.0/taxonomicStatus']
-        def model = [resource: resource, context: context]
+        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', 'rdfs:label': 'accepted', 'dcterms:title': 'Accepted Title', 'dc:description': 'A description']
+        def model = [resource: resource, context: makeContext1()]
         return model
     }
 
 
     def makeLd2() {
-        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', '@shortId': 'ts:accepted', '@label': 'accepted', '@title': 'Accepted', '@description': 'A description', 'format:icon': 'http://www.ala.org.au/icon/accepted.png']
-        def rdfType = [ '@id': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '@shortId': 'rdf:type']
-        def formatIcon = [ '@id': 'http://www.ala.org.au/format/1.0/icon', '@shortId': 'format:icon']
-        def formatWidth = [ '@id': 'http://www.ala.org.au/format/1.0/width', '@shortId': 'format:width']
-        def formatHeight = [ '@id': 'http://www.ala.org.au/format/1.0/height', '@shortId': 'format:height']
-        def formatAsset = [ '@id': 'http://www.ala.org.au/format/1.0/asset', '@shortId': 'format:asset']
-        def icon = ['@id': 'http://www.ala.org.au/icon/accepted.png', '@title': 'Accepted', 'rdf:type': 'format:Image', 'format:width': [ '@value': '48'], 'format:height': [ '@value': '24'], 'format:asset': 'http://localhost/accepted.png']
-        def context = [ts: 'http://www.ala.org.au/terms/1.0/taxonomicStatus', 'rdf:type': rdfType, 'format:icon': formatIcon, 'format:height': formatHeight, 'format:width': formatWidth,'format:asset': formatAsset, 'http://www.ala.org.au/icon/accepted.png': icon]
-        def model = [resource: resource, context: context]
+        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', 'skos:prefLabel': 'accepted', 'dcterms:title': 'Accepted Thing', 'dcterms:description': 'A descriptive bit', 'format:icon': 'http://www.ala.org.au/icon/accepted.png']
+        def model = [resource: resource, context: makeContext2()]
         return model
     }
 
@@ -501,13 +516,12 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
     }
 
     def makeLd8() {
-        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', '@shortId': 'ts:accepted', '@label': 'accepted', '@title': 'Accepted', '@description': 'A description', 'rdf:type': [ 'skos:Concept']]
-        def rdfType = [ '@id': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', '@shortId': 'rdf:type']
-        def skosConcept = [ '@id': 'http://www.w3.org/2004/02/skos/core#Concept', '@shortId': 'skos:Concept']
-        def formatConcept = [ '@id': 'http://www.ala.org.au/format/1.0/Concept', '@shortId': 'format:Concept']
-        def formatLanguage = [ '@id': 'http://www.ala.org.au/format/1.0/Language', '@shortId': 'format:Language']
-        def formatTerm = [ '@id': 'http://www.ala.org.au/format/1.0/Term', '@shortId': 'format:Term']
-        def context = [ts: 'http://www.ala.org.au/terms/1.0/taxonomicStatus', 'rdf:type': rdfType, 'skos:Concept': skosConcept, 'format:Concept': formatConcept, 'format:Language': formatLanguage, 'format:Term': formatTerm]
+        def resource = [ '@id': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted', 'rdfs:label': 'accepted', 'dcterms:title': 'Accepted', 'dcterms:description': 'A description', 'rdf:type': [ 'skos:Concept']]
+        def context = makeContext1()
+        context['skos:Concept'] = [ '@id': 'http://www.w3.org/2004/02/skos/core#Concept']
+        context['format:Concept'] = [ '@id': 'http://www.ala.org.au/format/1.0/Concept']
+        context['format:Language'] = [ '@id': 'http://www.ala.org.au/format/1.0/Language']
+        context['format:Term'] = [ '@id': 'http://www.ala.org.au/format/1.0/Term']
         def model = [resource: resource, context: context]
         return model
     }

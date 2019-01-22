@@ -13,6 +13,8 @@ class VocabularyTagLib {
     static CONCEPT = 'http://www.ala.org.au/format/1.0/Concept'
     /** The IRI for the format:Language class */
     static LANGUAGE= 'http://www.ala.org.au/format/1.0/Language'
+    /** The IRI for the formatImage class */
+    static IMAGE = 'http://www.ala.org.au/format/1.0/Image'
     /** The IRI for the format:Language class */
     static TERM= 'http://www.ala.org.au/format/1.0/Term'
     /** The IRI for the format:style attribute */
@@ -27,6 +29,22 @@ class VocabularyTagLib {
     static ASSET = 'http://www.ala.org.au/format/1.0/asset'
     /** The IRI for the format:icon attribute */
     static ICON = 'http://www.ala.org.au/format/1.0/icon'
+    /** The IRI for the skos:prefLabel attribute */
+    static PREF_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel'
+    /** The IRI for the rdfs:label attribute */
+    static LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
+    /** The IRI for the skos:altLLabel attribute */
+    static ALT_LABEL = 'http://www.w3.org/2004/02/skos/core#altLabel'
+    /** The IRI for the dcterms:title attribute */
+    static TITLE = 'http://purl.org/dc/terms/title'
+    /** The IRI for the dc:title attribute */
+    static DC_TITLE = 'http://purl.org/dc/elements/1.1/title'
+    /** The IRI for the dcterms:description attribute */
+    static DESCRIPTION= 'http://purl.org/dc/terms/description'
+    /** The IRI for the dc:title attribute */
+    static DC_DESCRIPTION = 'http://purl.org/dc/elements/1.1/description'
+    /** The IRI for the rdfs:comment attribute */
+    static COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment'
     /** The IRI for the skos:notation attribute */
     static NOTATION = 'http://www.w3.org/2004/02/skos/core#notation'
     /** The IRI for the skos:notation attribute */
@@ -36,6 +54,26 @@ class VocabularyTagLib {
             concept: CONCEPT,
             language: LANGUAGE,
             term: TERM
+    ]
+
+    static LABEL_SOURCES = [
+            PREF_LABEL,
+            LABEL,
+            ALT_LABEL,
+            TITLE,
+            DC_TITLE,
+            NOTATION
+    ]
+
+    static TITLE_SOURCES = [
+            TITLE,
+            DC_TITLE
+    ]
+
+    static DESCRIPTION_SOURCES = [
+            DESCRIPTION,
+            DC_DESCRIPTION,
+            COMMENT
     ]
 
     /**
@@ -55,9 +93,9 @@ class VocabularyTagLib {
      * <p>
      * The possible styles are given by the http://www.ala.org.au/format/1.0/styles vocabulary but can be
      * <ul>
-     *     <li><code>label</code> Choose the supplied @label, which is usually the skos:prefLabel or rdfs:label, if not that then the @shortId or the @id</li>
-     *     <li><code>id</code> Choose the supplied @shortId, which is a namespaced identifier or the @id</li>
-     *     <li><code>title</code> Choose the supplied @title, followed by the @label, @shortId and @id</li>
+     *     <li><code>label</code> Choose the supplied label, which is usually the skos:prefLabel or rdfs:label, if not that then the shortId or the @id</li>
+     *     <li><code>id</code> Choose the shortId, which is a namespaced identifier or the @id</li>
+     *     <li><code>title</code> Choose the supplied title, followed by the label, shortId and @id</li>
      *     <li><code>long</code> Always show the long @id</li>
      *     <li><code>image</code> Display an image as an full-size image
      *     <li><code>thumbnail</code> Display an image as a thumbnail with a link to the full size image
@@ -92,27 +130,15 @@ class VocabularyTagLib {
                 def key = contract(STYLE, context)
                 def pstyle = sf[key]
                 if (pstyle) {
-                    style = context[pstyle]?.get('@label')
+                    style = getLabel(context[pstyle], context, response.locale)
                 }
             }
         }
         style = attrs.style ?: style ?: 'label'
         value = context?.get(value) ?: value // Dereference
         if ((value in Map) && value['@id']) { // Contextualised IRI
-            out << link(base: grailsApplication.config.vocabulary.server, controller: 'vocabulary', action: 'show', params: [iri: value.'@id'], class: class_) {
-                def label = value
-                if (isImageStyle(style)) {
-                    def icon = contract(ICON, context)
-                    if (value[icon]) {
-                        def iref = value[icon]
-                        iref = context?.get(iref) ?: iref
-                        if (iref in Map) {
-                            label = iref
-                            ['@label', '@title', '@description', '@id'].each { iref[it] = value[it] ?: iref[it] }
-                        }
-                    }
-                }
-                voc.label(value: label, style: style, link: true)
+            out << link(base: grailsApplication.config.vocabulary.server, controller: 'vocabulary', action: 'show', params: [iri: value['@id']], class: class_) {
+                 voc.label(value: value, style: style, link: true)
             }
         } else if (value instanceof String) { // Uncontextualised IRI
             out << link(controller: 'vocabulary', action: 'show', params: [iri: value], class: class_) {
@@ -165,10 +191,14 @@ class VocabularyTagLib {
             out << value.encodeAsHTML()
         } else {
             def iri = value['@id']
-            def label = value['@label']
-            def shortId = value['@shortId']
-            def title = value['@title']
-            def description = value['@description']
+            def shortId = contract(iri, context)
+            if (shortId == iri)
+                shortId = namespaced(iri, context)
+            if (shortId == iri)
+                shortId = null
+            def label = getLabel(value, context, response.locale) ?: shortId ?: ResourceUtils.localName(iri)
+            def title = getTitle(value, context, response.locale)
+            def description = getDescription(value, context, response.locale)
             switch (style) {
                 case 'long':
                     if (label && !title)
@@ -193,18 +223,34 @@ class VocabularyTagLib {
             }
             if (description)
                 title = addtitle(title, ResourceUtils.shorten(description))
+            def icon = null
             if (isImageStyle(style)) {
-                def width = value[contract(WIDTH, context)]?.get('@value') as Integer
-                def height = value[contract(HEIGHT, context)]?.get('@value') as Integer
-                def asset = value[contract(ASSET, context)]
-                def src = asset ?: iri
+                def types = value[contract(TYPE, context)]
+                def imagetype = contract(IMAGE, context)
+                if (types == imagetype || (types in Collection && types.contains(imagetype))) {
+                    icon = value
+                } else {
+                    def iref = value[contract(ICON, context)]
+                    if (iref) {
+                        iref = context?.get(iref) ?: iref
+                        if (iref in Map) {
+                            icon = iref
+                        }
+                    }
+                }
+            }
+            if (icon) {
+                def width = icon[contract(WIDTH, context)]?.get('@value') as Integer
+                def height = icon[contract(HEIGHT, context)]?.get('@value') as Integer
+                def asset = icon[contract(ASSET, context)]
+                def src = asset ?: icon['@id']
                 out << "<img "
                 if (width)
                     out << "width=\"${width}\" "
                 if (height)
                     out << "width=\"${height}\" "
                 if (title)
-                    out << "title=\"${ title.encodeAsHTML() }\" "
+                    out << "title=\"${title.encodeAsHTML()}\" "
                 out << "src=\"${src}\">"
             } else {
                 if (title) {
@@ -331,6 +377,37 @@ class VocabularyTagLib {
         out << ResourceUtils.localName(attrs.iri)
     }
 
+    def getLabel(Map resource, Map context, Locale locale) {
+        return getText(resource, context, LABEL_SOURCES, locale)
+    }
+
+    def getTitle(Map resource, Map context, Locale locale) {
+        return getText(resource, context, TITLE_SOURCES, locale)
+    }
+
+    def getDescription(Map resource, Map context, Locale locale) {
+        return getText(resource, context, DESCRIPTION_SOURCES, locale)
+    }
+
+    def getText(Map resource, Map context, List sources, Locale locale) {
+        if (!resource)
+            return ''
+        def lt = locale.toLanguageTag()
+        def ln = locale.language
+         for (String source: sources) {
+            source = contract(source, context)
+            def labels = resource[source]
+            def label = null
+            if (labels in List) {
+                label  = labels.find({ it['@language'] == lt }) ?: labels.find({ it['@language'] == ln}) ?: labels.find({ !it['@language'] }) ?: labels[0]
+            } else
+                label = labels
+            if (label)
+                return label
+        }
+        return null
+    }
+
     /**
      * See if we can go from a full URL to a contracted version with a prefix.
      * <p>
@@ -347,6 +424,23 @@ class VocabularyTagLib {
         return definition?.key ?: identifier
     }
 
+    /**
+     * See if we can namespace an iri
+     *
+     * @param identifier The IRI
+     * @param context The context, with a namespace map
+     *
+     * @return Either the namespaced IRI or the unchanged IRI
+     */
+    def namespaced(String identifier, Map context) {
+        def namespace = context.find { entry -> entry.value in String && identifier.startsWith(entry.value) }
+        if (namespace) {
+            def local = identifier.substring(namespace.value.length())
+            if (local && local.matches(/[^\/#:]+/))
+                return namespace.key + ':' + local
+        }
+        return identifier
+    }
 
     /**
      * Is this an image style
