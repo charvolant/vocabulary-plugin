@@ -1,7 +1,10 @@
 package au.org.ala.vocabulary
 
-import au.org.ala.util.TitleCapitaliser
+import au.org.ala.util.ResourceUtils
+import grails.config.Config
 import grails.testing.web.taglib.TagLibUnitTest
+import org.springframework.boot.bind.YamlConfigurationFactory
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
 /**
@@ -12,8 +15,8 @@ import spock.lang.Specification
  */
 class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<VocabularyTagLib> {
     def setup() {
-        grailsApplication.config.vocabulary.service = 'https://voc.ala.org.au/ws'
-        grailsApplication.config.vocabulary.server = 'https://voc.ala.org.au'
+        def config = new Yaml().load(this.class.getResourceAsStream('voc.yml'))
+        grailsApplication.config.merge(config)
     }
 
     def 'test contract 1'() {
@@ -444,18 +447,19 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
     def makeContext1() {
         return [
                 'ts': 'http://www.ala.org.au/terms/1.0/taxonomicStatus/',
-                'rdf:type': ['@id': VocabularyTagLib.TYPE ],
-                'rdfs:label': ['@id': VocabularyTagLib.LABEL ],
-                'skos:preLabel':  ['@id': VocabularyTagLib.PREF_LABEL ],
-                'dcterms:title': [ '@id': VocabularyTagLib.TITLE],
-                'dcterms:description': [ '@id': VocabularyTagLib.DESCRIPTION],
-                'dc:description': [ '@id': VocabularyTagLib.DC_DESCRIPTION ]
+                'rdf:type': ['@id': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' ],
+                'rdfs:label': ['@id': 'http://www.w3.org/2000/01/rdf-schema#label' ],
+                'skos:preLabel':  ['@id': 'http://www.w3.org/2004/02/skos/core#prefLabel' ],
+                'dcterms:title': [ '@id': 'http://purl.org/dc/terms/title'],
+                'dcterms:description': [ '@id': 'http://purl.org/dc/terms/description'],
+                'dc:description': [ '@id': 'http://purl.org/dc/elements/1.1/description' ]
         ]
     }
 
     def makeContext2() {
         def context = makeContext1()
         context['format:Image'] = [ '@id': 'http://www.ala.org.au/format/1.0/Image']
+        context['format:Concept'] = [ '@id': 'http://www.ala.org.au/format/1.0/Concept']
         context['format:icon'] = [ '@id': 'http://www.ala.org.au/format/1.0/icon']
         context['format:width'] = [ '@id': 'http://www.ala.org.au/format/1.0/width']
         context['format:height'] = [ '@id': 'http://www.ala.org.au/format/1.0/height']

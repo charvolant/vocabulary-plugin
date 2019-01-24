@@ -1,5 +1,7 @@
 package au.org.ala.util
 
+import au.org.ala.vocabulary.VocabularyTagLib
+
 /**
  * Useful utilities for handling resources and IRIs
  *

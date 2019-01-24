@@ -3,78 +3,64 @@ package au.org.ala.vocabulary
 import au.org.ala.util.CamelCaseTokenizer
 import au.org.ala.util.ResourceUtils
 import au.org.ala.util.TitleCapitaliser
+import grails.config.Config
+import grails.core.support.GrailsConfigurationAware
 
-class VocabularyTagLib {
+/**
+ * Vocabulary tags, used to get data from jason-ld resources.
+ * <p>
+ * This taglib uses the following conventions
+ * <ul>
+ *     <li>If a context is not specifically supplied and the page model has <code>pageScope.context</code> then the model conext is used.</li>
+ *     <li>If a locale is not specifically then the response locale is used</li>
+ *     <li>A <code>@map</code> attribute is injected into any context to provide URL -> term mappings
+ * </li>
+ */
+class VocabularyTagLib implements GrailsConfigurationAware {
     static namespace = "voc"
 
-    /** The IRI for the rdf:type attribute */
-    static TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
-    /** The IRI for the format:Tag class */
-    static CONCEPT = 'http://www.ala.org.au/format/1.0/Concept'
-    /** The IRI for the format:Language class */
-    static LANGUAGE= 'http://www.ala.org.au/format/1.0/Language'
-    /** The IRI for the formatImage class */
-    static IMAGE = 'http://www.ala.org.au/format/1.0/Image'
-    /** The IRI for the format:Language class */
-    static TERM= 'http://www.ala.org.au/format/1.0/Term'
-    /** The IRI for the format:style attribute */
-    static STYLE = 'http://www.ala.org.au/format/1.0/style'
-    /** The IRI for the format:cssClass attribute */
-    static CSS_CLASS = 'http://www.ala.org.au/format/1.0/cssClass'
-    /** The IRI for the format:height attribute */
-    static HEIGHT = 'http://www.ala.org.au/format/1.0/height'
-    /** The IRI for the format:width attribute */
-    static WIDTH = 'http://www.ala.org.au/format/1.0/width'
-    /** The IRI for the format:asset attribute */
-    static ASSET = 'http://www.ala.org.au/format/1.0/asset'
-    /** The IRI for the format:icon attribute */
-    static ICON = 'http://www.ala.org.au/format/1.0/icon'
-    /** The IRI for the skos:prefLabel attribute */
-    static PREF_LABEL = 'http://www.w3.org/2004/02/skos/core#prefLabel'
-    /** The IRI for the rdfs:label attribute */
-    static LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
-    /** The IRI for the skos:altLLabel attribute */
-    static ALT_LABEL = 'http://www.w3.org/2004/02/skos/core#altLabel'
-    /** The IRI for the dcterms:title attribute */
-    static TITLE = 'http://purl.org/dc/terms/title'
-    /** The IRI for the dc:title attribute */
-    static DC_TITLE = 'http://purl.org/dc/elements/1.1/title'
-    /** The IRI for the dcterms:description attribute */
-    static DESCRIPTION= 'http://purl.org/dc/terms/description'
-    /** The IRI for the dc:title attribute */
-    static DC_DESCRIPTION = 'http://purl.org/dc/elements/1.1/description'
-    /** The IRI for the rdfs:comment attribute */
-    static COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment'
-    /** The IRI for the skos:notation attribute */
-    static NOTATION = 'http://www.w3.org/2004/02/skos/core#notation'
-    /** The IRI for the skos:notation attribute */
-    static IN_SCHEME = 'http://www.w3.org/2004/02/skos/core#inScheme'
-    
-    static TAG_TYPE = [
-            concept: CONCEPT,
-            language: LANGUAGE,
-            term: TERM
-    ]
+    /** The rdf:type IRI */
+    String rdfType
+    /** The format:asset IRI */
+    String formatAsset
+    /** The format:height IRI */
+    String formatHeight
+    /** The format:icon IRI */
+    String formatIcon
+    /** The format:style IRI */
+    String formatStyle
+    /** The format:width IRI */
+    String formatWidth
+    /** The set of types that indicate an image resource */
+    Map<String, String> imageTypes
+    /** The set of types that indicate a taggable resource */
+    Map<String, String> tagTypes
+    /** The sources for labels */
+    List<List<String>> labelSources
+    /** The sources for titles */
+    List<List<String>> titleSources
+    /** The sources for labels */
+    List<List<String>> descriptionSources
 
-    static LABEL_SOURCES = [
-            PREF_LABEL,
-            LABEL,
-            ALT_LABEL,
-            TITLE,
-            DC_TITLE,
-            NOTATION
-    ]
-
-    static TITLE_SOURCES = [
-            TITLE,
-            DC_TITLE
-    ]
-
-    static DESCRIPTION_SOURCES = [
-            DESCRIPTION,
-            DC_DESCRIPTION,
-            COMMENT
-    ]
+    /**
+     * Update the configuration
+     *
+     * @param config
+     */
+    @Override
+    void setConfiguration(Config config) {
+        rdfType = config.vocabulary.rdf.type.iri
+        formatAsset = config.vocabulary.format.asset.iri
+        formatHeight = config.vocabulary.format.height.iri
+        formatIcon = config.vocabulary.format.icon.iri
+        formatStyle = config.vocabulary.format.style.iri
+        formatWidth = config.vocabulary.format.width.iri
+        imageTypes = config.vocabulary.image.types
+        tagTypes = config.vocabulary.tag.types
+        labelSources = config.vocabulary.label.sources
+        titleSources = config.vocabulary.title.sources
+        descriptionSources = config.vocabulary.description.sources
+    }
 
     /**
      * Get the short code (namespace:localName) if available associated with an IRI
@@ -86,6 +72,38 @@ class VocabularyTagLib {
         def context = attrs.context ?: pageScope.context
         def iri = attrs.iri
         out << contract(iri, context)
+    }
+
+    /**
+     * Get the title for a resource or value
+     *
+     * @attr value The value to get a title for
+     * @attr context Used to expand references (defaults to pageScope.context)
+     * @attr locale The locale to use (default to response.locale)
+     */
+    def title = { attrs, body ->
+        def context = attrs.context ?: pageScope.context
+        def value = attrs.value
+        def locale = attrs.locale ?: response.locale
+        def text = getTitle(value, context, locale)
+        if (text)
+            out << text
+    }
+
+    /**
+     * Get the description for a resource or value
+     *
+     * @attr value The value to get a title for
+     * @attr context Used to expand references (defaults to pageScope.context)
+     * @attr locale The locale to use (default to response.locale)
+     */
+    def description = { attrs, body ->
+        def context = attrs.context ?: pageScope.context
+        def value = attrs.value
+        def locale = attrs.locale ?: response.locale
+        def text = getDescription(value, context, locale)
+        if (text)
+            out << text
     }
 
     /**
@@ -225,12 +243,10 @@ class VocabularyTagLib {
                 title = addtitle(title, ResourceUtils.shorten(description))
             def icon = null
             if (isImageStyle(style)) {
-                def types = value[contract(TYPE, context)]
-                def imagetype = contract(IMAGE, context)
-                if (types == imagetype || (types in Collection && types.contains(imagetype))) {
+                if (hasType(value, context, imageTypes)) {
                     icon = value
                 } else {
-                    def iref = value[contract(ICON, context)]
+                    def iref = value[contract(formatIcon, context)]
                     if (iref) {
                         iref = context?.get(iref) ?: iref
                         if (iref in Map) {
@@ -240,9 +256,9 @@ class VocabularyTagLib {
                 }
             }
             if (icon) {
-                def width = icon[contract(WIDTH, context)]?.get('@value') as Integer
-                def height = icon[contract(HEIGHT, context)]?.get('@value') as Integer
-                def asset = icon[contract(ASSET, context)]
+                def width = icon[contract(formatWidth, context)]?.get('@value') as Integer
+                def height = icon[contract(formatHeight, context)]?.get('@value') as Integer
+                def asset = icon[contract(formatAsset, context)]
                 def src = asset ?: icon['@id']
                 out << "<img "
                 if (width)
@@ -300,14 +316,14 @@ class VocabularyTagLib {
         def vocabulary = attrs.vocabulary
         def concept = attrs.concept
         def style = attrs.style
-        style = TAG_TYPE[style] ?: style
+        style = tagTypes[style] ?: style
         def text = concept ?: ResourceUtils.localName(iri) ?: 'unknown'
         def clazz = 'tag-concept'
-        if (style == LANGUAGE)
+        if (style == tagTypes['language'])
             clazz = 'tag-language'
-        if (style == TERM)
+        if (style == tagTypes['term'])
             clazz = 'tag-term'
-        if (style != LANGUAGE)
+        if (style != tagTypes['language'])
             text = expandCamelCase(text)
         if (!iri && !vocabulary && !concept)
             concept = 'unknown'
@@ -352,13 +368,50 @@ class VocabularyTagLib {
         def value = attrs.value
         def style = attrs.style
         def context = attrs.context ?: pageScope.context
-        def type = contract(TYPE, context)
-        style = TAG_TYPE[style] ?: style
-        style = style ? [contract(style, context)] : TAG_TYPE.values().collect({ contract(it, context) })
-        def types = value[type]
-        if (types.find { style.contains(it)} ) {
+        style = tagTypes[style] ?: style
+        style = style ? [style: style] : tagTypes
+        if ( hasType(value, context, style) ) {
             out << body()
         }
+    }
+
+    /**
+     * Test to see if a resource is an image. If so, include the body.
+     * <p>
+     * This looks for format:Tag|format:Language|format:Term depending on the tag attribute in the types.
+     *
+     * @attr value The resource to test (a JSON LD resource)
+     * @attr style Either an IRI or one of 'image'  (defaults to empty, meaning everything)
+     * @attr context The associated context defaults to pageScope.context
+     */
+    def isImage = { attrs, body ->
+        def value = attrs.value
+        def style = attrs.style
+        def context = attrs.context ?: pageScope.context
+        style = imageTypes[style] ?: style
+        style = style ? [style: style] : imageTypes
+        def types = value[type]
+        if ( hasType(value, context, style) ) {
+            out << body()
+        }
+    }
+
+    /**
+     * See if a resource has a particular type
+     *
+     * @param resource The resource
+     * @param context The context
+     * @param types The list of matching types
+     *
+     * @return True if the resource has a type matching any of the supplied types
+     */
+    boolean hasType(Map resource, Map context, Map types) {
+        def valid = types.collect { k, v -> contract(v, context) }
+        def type = contract(rdfType, context)
+        def rtypes = resource[type]
+        if (!rtypes)
+            return false
+        return (rtypes in Collection) ? rtypes.any { valid.contains(it) } : valid.contains(rtypes)
     }
 
     /**
@@ -377,34 +430,83 @@ class VocabularyTagLib {
         out << ResourceUtils.localName(attrs.iri)
     }
 
+    /**
+     * Get a suitable label (short descriptive text) for a resource
+     *
+     * @param resource The resource
+     * @param context The resource context
+     * @param locale The preferred locale
+     *
+     * @return A label, or none for not present
+     */
     def getLabel(Map resource, Map context, Locale locale) {
-        return getText(resource, context, LABEL_SOURCES, locale)
+        return getText(resource, context, labelSources, locale)
     }
 
+    /**
+     * Get a suitable title (short headline text) for a resource
+     *
+     * @param resource The resource
+     * @param context The resource context
+     * @param locale The preferred locale
+     *
+     * @return A title, or none for not present
+     */
     def getTitle(Map resource, Map context, Locale locale) {
-        return getText(resource, context, TITLE_SOURCES, locale)
+        return getText(resource, context, titleSources, locale)
     }
-
+    /**
+     * Get a suitable description (long descriptive text) for a resource
+     *
+     * @param resource The resource
+     * @param context The resource context
+     * @param locale The preferred locale
+     *
+     * @return A description, or none for not present
+     */
     def getDescription(Map resource, Map context, Locale locale) {
-        return getText(resource, context, DESCRIPTION_SOURCES, locale)
+        return getText(resource, context, descriptionSources, locale)
     }
 
-    def getText(Map resource, Map context, List sources, Locale locale) {
+    /**
+     * Search for a suitable property.
+     * <p>
+     * Groups of sources are searched in order first for a language tag match, then for a language match and then for a value.
+     * If one is not found, then the next group of sources is tried.
+      * </p>
+     * <p>
+     * For example, if the sources are <code>[[dcterms:title, >dc:title]]</code>, the locale is 'fr-CA' and the possible values are
+     * <code>dcterms:title = ['chercheuse'@fr, 'researcher' ] dc:title = ['chercheure'@fr-CA ]</code> will result in 'chercheure'.
+     * If the sources are <code>[[skos:prefLabel], [rdfs:label]]</code>, the locale is 'fr-CA' and the possible values
+     * are <code>skos:prefLabel = ['tofu'@fr, 'tahu'], rdfs:label = ['toffu'@fr-CA ]</code> with result in 'tofu'
+     * </p>
+     *
+     * @param resource The resource
+     * @param context The resource context
+     * @param sources The sources, a list of lists of
+     * @param locale The locale to use
+     *
+     * @return A suitable value or null for not found
+     */
+    protected def getText(Map resource, Map context, List<List<String>> sources, Locale locale) {
         if (!resource)
             return ''
         def lt = locale.toLanguageTag()
         def ln = locale.language
-         for (String source: sources) {
-            source = contract(source, context)
-            def labels = resource[source]
-            def label = null
-            if (labels in List) {
-                label  = labels.find({ it['@language'] == lt }) ?: labels.find({ it['@language'] == ln}) ?: labels.find({ !it['@language'] }) ?: labels[0]
-            } else
-                label = labels
-            if (label)
-                return label
-        }
+        def finders = [ { it in Map && it['@language'] == lt }, { it in Map && it['@language'] == ln }, { true } ]
+        for (List<String> group: sources) {
+            for (Closure<Boolean> finder: finders) {
+                for (String source : group) {
+                    source = contract(source, context)
+                    def labels = resource[source]
+                    if (!labels)
+                        continue
+                    def lab = (labels in Iterable) ? labels.find(finder) : (finder(labels) ? labels : null)
+                    if (lab)
+                        return (lab in Map) ? lab['@value'] : lab
+                }
+            }
+         }
         return null
     }
 
@@ -413,6 +515,8 @@ class VocabularyTagLib {
      * <p>
      * Useful if someone has supplied a complete URL for something which, in the context
      * is simplified.
+     * <p>
+     * The first time this is used, a '@map' value is injected into the context to speed up contractions
      *
      * @param identifier The identifier
      * @param context The context map
@@ -420,8 +524,25 @@ class VocabularyTagLib {
      * @return A possible contracted identifier
      */
     def contract(String identifier, Map context) {
-        def definition = context.find { entry -> entry.value in Map && entry.value['@id'] == identifier }
-        return definition?.key ?: identifier
+        if (!context)
+            return identifier
+        def map = context['@map']
+        if(map == null) {
+            synchronized (context) {
+                map = context['@map']
+                if (map == null) {
+                    map = context.inject([:]) { m, k, v ->
+                        if (v in String) {
+                            m[v] = k
+                        } else if (v in Map && v['@id'])
+                            m[v['@id']] = k
+                        m
+                    }
+                    context['@map'] = map
+                }
+            }
+        }
+        return map[identifier] ?: identifier
     }
 
     /**

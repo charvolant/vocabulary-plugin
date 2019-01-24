@@ -1,22 +1,6 @@
----
-grails:
-    profile: web-plugin
-    codegen:
-        defaultPackage: au.org.ala.vocabulary
-    gorm:
-        reactor:
-            # Whether to translate GORM events into Reactor events
-            # Disabled by default for performance reasons
-            events: false
-info:
-    app:
-        name: '@info.app.name@'
-        version: '@info.app.version@'
-        grailsVersion: '@info.app.grailsVersion@'
----
 vocabulary:
-  server: http://localhost:8080
-  service: http://localhost:8090
+  server: https://voc.ala.org.au
+  service: https://voc.ala.org.au/ws
   rdf:
     type:
       iri: http://www.w3.org/1999/02/22-rdf-syntax-ns#type
