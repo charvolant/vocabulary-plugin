@@ -1,0 +1,431 @@
+{
+  "@id": "http://www.ala.org.au/terms/1.0/taxonomicStatuses",
+  "@language": "en",
+  "@type": "ala:DwCVocabulary",
+  "ala:forTerm": "dwc:taxonomicStatus",
+  "dcterms:title": {
+    "@value": "Taxonomic Status Vocabulary",
+    "@language": "en"
+  },
+  "format:backgroundColor": {
+    "@value": "#5ec6cc"
+  },
+  "rdf:type": "ala:DwCVocabulary",
+  "rdfs:comment": {
+    "@value": "The taxonomic status vocabulary used by the ALA",
+    "@language": "en"
+  },
+  "skos:hasTopConcept": [
+    "http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted",
+    "http://www.ala.org.au/terms/1.0/taxonomicStatus/synonym"
+  ],
+  "@context": {
+    "dwc": "http://rs.tdwg.org/dwc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "format": "http://www.ala.org.au/format/1.0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ala": "http://www.ala.org.au/terms/1.0/",
+    "http://www.ala.org.au/format/1.0/categories/display": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/display",
+      "@type": "http://www.ala.org.au/format/1.0/Category",
+      "dcterms:description": {
+        "@value": "Information about how to display a class or property"
+      },
+      "dcterms:title": {
+        "@value": "Display"
+      },
+      "format:priority": {
+        "@value": 800,
+        "@type": "xsd:integer"
+      },
+      "rdf:type": "http://www.ala.org.au/format/1.0/Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/vocabulary": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "@type": "http://www.ala.org.au/format/1.0/Category",
+      "dcterms:description": {
+        "@value": "Vocabulary information, such as broader/narrower terms, schemes etc."
+      },
+      "dcterms:title": {
+        "@value": "Vocabulary"
+      },
+      "format:priority": {
+        "@value": 900,
+        "@type": "xsd:integer"
+      },
+      "rdf:type": "http://www.ala.org.au/format/1.0/Category"
+    },
+    "http://www.ala.org.au/format/1.0/categories/description": {
+      "@id": "http://www.ala.org.au/format/1.0/categories/description",
+      "@type": "http://www.ala.org.au/format/1.0/Category",
+      "dcterms:description": {
+        "@value": "Descriptive information: labels, titles, description etc."
+      },
+      "dcterms:title": {
+        "@value": "Description"
+      },
+      "format:priority": {
+        "@value": 1000,
+        "@type": "xsd:integer"
+      },
+      "rdf:type": "http://www.ala.org.au/format/1.0/Category"
+    },
+    "rdf:type": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "ala:DwCVocabulary": {
+      "@id": "http://www.ala.org.au/terms/1.0/DwCVocabulary",
+      "@type": "http://www.w3.org/2002/07/owl#Class",
+      "rdf:type": "http://www.w3.org/2002/07/owl#Class",
+      "rdfs:comment": {
+        "@value": "A controlled vocabulary used to manage darwin core terms"
+      },
+      "rdfs:label": {
+        "@value": "Vocabulary"
+      },
+      "rdfs:subClassOf": "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+      "skos:prefLabel": {
+        "@value": "Vocabulary"
+      }
+    },
+    "dcterms:title": {
+      "@id": "http://purl.org/dc/terms/title",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:description"
+    },
+    "rdf:langString": {
+      "@id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString",
+      "@type": "@id"
+    },
+    "format:backgroundColor": {
+      "@id": "http://www.ala.org.au/format/1.0/backgroundColor",
+      "@type": "http://www.w3.org/2002/07/owl#DatatypeProperty",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "format:comesAfter": "http://www.ala.org.au/format/1.0/textColor",
+      "rdf:type": "http://www.w3.org/2002/07/owl#DatatypeProperty",
+      "rdfs:comment": {
+        "@value": "The background color associated with a tag. Any css colour can be used.",
+        "@language": "en"
+      },
+      "rdfs:label": {
+        "@value": "background color"
+      },
+      "rdfs:range": "xsd:string"
+    },
+    "xsd:string": {
+      "@id": "http://www.w3.org/2001/XMLSchema#string",
+      "@type": "@id"
+    },
+    "ala:forTerm": {
+      "@id": "http://www.ala.org.au/terms/1.0/forTerm",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": "http://www.w3.org/2004/02/skos/core#definition",
+      "rdf:type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": {
+        "@value": "The DwC term that this is a controlled vocabulary for.",
+        "@language": "en"
+      },
+      "rdfs:label": {
+        "@value": "for term"
+      },
+      "rdfs:range": "http://www.w3.org/2004/02/skos/core#Concept"
+    },
+    "dwc:taxonomicStatus": {
+      "@id": "http://rs.tdwg.org/dwc/terms/taxonomicStatus",
+      "@type": [
+        "http://www.ala.org.au/format/1.0/Term",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+      ],
+      "ala:solrName": {
+        "@value": "taxonomic_status"
+      },
+      "ala:status": {
+        "@value": "recommended"
+      },
+      "dcterms:description": {
+        "@value": "The status of the use of the scientificName as a label for a taxon. Requires taxonomic opinion to define the scope of a taxon. Rules of priority then are used to define the taxonomic status of the nomenclature contained in that scope, combined with the experts opinion. It must be linked to a specific taxonomic reference that defines the concept."
+      },
+      "dcterms:issued": {
+        "@value": "2017-10-06"
+      },
+      "owl:sameAs": "http://rs.tdwg.org/dwc/terms/version/taxonomicStatus-2018-09-06",
+      "rdf:type": [
+        "http://www.ala.org.au/format/1.0/Term",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+      ],
+      "rdfs:label": {
+        "@value": "taxonomicStatus"
+      },
+      "skos:example": {
+        "@value": "`invalid`, `misapplied`, `homotypic synonym`, `accepted`"
+      },
+      "skos:inScheme": [
+        "http://rs.tdwg.org/dwc/terms",
+        "http://www.ala.org.au/dwc/terms"
+      ],
+      "skos:notation": {
+        "@value": "taxonomicStatus"
+      },
+      "skos:note": {
+        "@value": "Recommended best practice is to use a controlled vocabulary."
+      }
+    },
+    "rdfs:comment": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#comment",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesAfter": "dcterms:description"
+    },
+    "skos:hasTopConcept": {
+      "@id": "http://www.w3.org/2004/02/skos/core#hasTopConcept",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
+    },
+    "http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted": {
+      "@id": "http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted",
+      "@type": [
+        "http://www.ala.org.au/format/1.0/Concept",
+        "http://www.ala.org.au/terms/1.0/TaxonomicStatus"
+      ],
+      "dcterms:description": {
+        "@value": "A currently accepted taxon.",
+        "@language": "en"
+      },
+      "dcterms:title": {
+        "@value": "Accepted",
+        "@language": "en"
+      },
+      "rdf:type": [
+        "http://www.ala.org.au/format/1.0/Concept",
+        "http://www.ala.org.au/terms/1.0/TaxonomicStatus"
+      ],
+      "skos:inScheme": "http://www.ala.org.au/terms/1.0/taxonomicStatuses",
+      "skos:notation": {
+        "@value": "accepted"
+      },
+      "skos:note": {
+        "@value": "The zoological term valid is not used, largely so that \"accepted\" in DwC terms make sense.",
+        "@language": "en"
+      }
+    },
+    "http://www.ala.org.au/terms/1.0/taxonomicStatus/synonym": {
+      "@id": "http://www.ala.org.au/terms/1.0/taxonomicStatus/synonym",
+      "@type": [
+        "http://www.ala.org.au/format/1.0/Concept",
+        "http://www.ala.org.au/terms/1.0/TaxonomicStatus"
+      ],
+      "dcterms:description": {
+        "@value": "A synonym, meaning that a taxon by this name have been reassigned to other taxa.",
+        "@language": "en"
+      },
+      "dcterms:title": {
+        "@value": "Synonym",
+        "@language": "en"
+      },
+      "rdf:type": [
+        "http://www.ala.org.au/format/1.0/Concept",
+        "http://www.ala.org.au/terms/1.0/TaxonomicStatus"
+      ],
+      "skos:inScheme": "http://www.ala.org.au/terms/1.0/taxonomicStatuses",
+      "skos:notation": {
+        "@value": "synonym"
+      }
+    },
+    "dcterms:description": {
+      "@id": "http://purl.org/dc/terms/description",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "format:priority": {
+      "@id": "http://www.ala.org.au/format/1.0/priority",
+      "@type": "http://www.w3.org/2002/07/owl#DatatypeProperty",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "rdf:type": "http://www.w3.org/2002/07/owl#DatatypeProperty",
+      "rdfs:comment": {
+        "@value": "The priority of a category or other preference-driven display option.",
+        "@language": "en"
+      },
+      "rdfs:label": {
+        "@value": "priority"
+      },
+      "rdfs:range": "xsd:integer"
+    },
+    "xsd:integer": {
+      "@id": "http://www.w3.org/2001/XMLSchema#integer",
+      "@type": "@id"
+    },
+    "format:category": {
+      "@id": "http://www.ala.org.au/format/1.0/category",
+      "@type": "http://www.w3.org/2002/07/owl#AnnotationProperty",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "rdf:type": "http://www.w3.org/2002/07/owl#AnnotationProperty",
+      "rdfs:comment": {
+        "@value": "Links a property to a specific display category. Properties can be annotated with categories to allow suitable display formatting options."
+      },
+      "rdfs:domain": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:label": {
+        "@value": "category"
+      },
+      "rdfs:range": "http://www.ala.org.au/format/1.0/Category"
+    },
+    "format:comesAfter": {
+      "@id": "http://www.ala.org.au/format/1.0/comesAfter",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#AnnotationProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "format:comesAfter": "format:comesBefore",
+      "rdf:type": [
+        "http://www.w3.org/2002/07/owl#AnnotationProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "rdfs:comment": {
+        "@value": "Indicates that this property comes after the object property when sorting statements"
+      },
+      "rdfs:domain": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:label": {
+        "@value": "comes after"
+      },
+      "rdfs:range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+    },
+    "rdfs:label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "dcterms:title"
+    },
+    "rdfs:subClassOf": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure"
+    },
+    "skos:prefLabel": {
+      "@id": "http://www.w3.org/2004/02/skos/core#prefLabel",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description",
+      "format:comesBefore": "rdfs:label"
+    },
+    "format:comesBefore": {
+      "@id": "http://www.ala.org.au/format/1.0/comesBefore",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#AnnotationProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "format:category": "http://www.ala.org.au/format/1.0/categories/display",
+      "format:comesAfter": "format:category",
+      "rdf:type": [
+        "http://www.w3.org/2002/07/owl#AnnotationProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "rdfs:comment": {
+        "@value": "Indicates that this property comes before the object property when sorting statements"
+      },
+      "rdfs:domain": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:label": {
+        "@value": "comes before"
+      },
+      "rdfs:range": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
+    },
+    "rdfs:range": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#range",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure",
+      "format:comesAfter": "rdfs:domain"
+    },
+    "skos:notation": {
+      "@id": "http://www.w3.org/2004/02/skos/core#notation",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/description"
+    },
+    "skos:inScheme": {
+      "@id": "http://www.w3.org/2004/02/skos/core#inScheme",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
+    },
+    "ala:status": {
+      "@id": "http://www.ala.org.au/terms/1.0/status",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/metadata",
+      "rdf:type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": {
+        "@value": "The status of a piece of information (eg. current, superceeded)"
+      },
+      "rdfs:label": {
+        "@value": "status"
+      },
+      "rdfs:range": "xsd:string"
+    },
+    "owl:sameAs": {
+      "@id": "http://www.w3.org/2002/07/owl#sameAs",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure",
+      "format:comesAfter": "rdfs:range"
+    },
+    "skos:note": {
+      "@id": "http://www.w3.org/2004/02/skos/core#note",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": "dcterms:description"
+    },
+    "skos:example": {
+      "@id": "http://www.w3.org/2004/02/skos/core#example",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary"
+    },
+    "dcterms:issued": {
+      "@id": "http://purl.org/dc/terms/issued",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/metadata"
+    },
+    "ala:solrName": {
+      "@id": "http://www.ala.org.au/terms/1.0/solrName",
+      "@type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/vocabulary",
+      "format:comesAfter": "http://www.w3.org/2004/02/skos/core#altLabel",
+      "rdf:type": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property",
+      "rdfs:comment": {
+        "@value": "The field name used by SOLR to index this property"
+      },
+      "rdfs:label": {
+        "@value": "solr name"
+      },
+      "rdfs:range": "xsd:string",
+      "rdfs:subPropertyOf": "http://www.w3.org/2004/02/skos/core#altLabel"
+    },
+    "rdfs:domain": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#domain",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure"
+    },
+    "rdfs:subPropertyOf": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#subPropertyOf",
+      "@type": "@id",
+      "format:category": "http://www.ala.org.au/format/1.0/categories/structure",
+      "format:comesAfter": "rdfs:subClassOf"
+    }
+  },
+  "@categorisation": {
+    "http://www.ala.org.au/format/1.0/categories/description": [
+      "dcterms:title",
+      "rdf:type",
+      "rdfs:comment"
+    ],
+    "http://www.ala.org.au/format/1.0/categories/vocabulary": [
+      "skos:hasTopConcept",
+      "ala:forTerm"
+    ],
+    "http://www.ala.org.au/format/1.0/categories/display": [
+      "format:backgroundColor"
+    ]
+  }
+}

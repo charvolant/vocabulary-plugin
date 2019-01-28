@@ -19,8 +19,10 @@ import grails.core.support.GrailsConfigurationAware
 class VocabularyTagLib implements GrailsConfigurationAware {
     static namespace = "voc"
 
-    /** The rdf:type IRI */
-    String rdfType
+    /** The vocabulary server */
+    String server
+    /** The vocabulary service */
+    String service
     /** The format:asset IRI */
     String formatAsset
     /** The format:height IRI */
@@ -49,7 +51,8 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      */
     @Override
     void setConfiguration(Config config) {
-        rdfType = config.vocabulary.rdf.type.iri
+        server = config.vocabulary.server
+        service = config.vocabulary.service
         formatAsset = config.vocabulary.format.asset.iri
         formatHeight = config.vocabulary.format.height.iri
         formatIcon = config.vocabulary.format.icon.iri
@@ -125,8 +128,9 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * @attr class The class to render the result as (defaults to rdf-resource)
      * @attr style The style to display resources as, defaults to either a style from the property label
      * @attr property The property associated with this value, used to inherit style parameters
-     * @attr language If true and a language-tagged resource, show a language tag (defaults to false)
+     * @attr language If true and a language-tagged resource other than the locale language, show a language tag (defaults to false)
      * @attr context / pageScope.context Used to expand references
+     * @attr locale The locale to display (defaults to response.locale)
      */
     def format = { attrs, body ->
         def context = attrs.context ?: pageScope.context
@@ -135,6 +139,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def style = null
         def property = attrs.property
         def language = attrs.language?.toBoolean() ?: false
+        def locale = attrs.locale ?: response.locale
 
         if (!value)
             return
@@ -145,31 +150,34 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                 sf = context.get(property)
             }
             if (sf) {
-                def key = contract(STYLE, context)
-                def pstyle = sf[key]
-                if (pstyle) {
-                    style = getLabel(context[pstyle], context, response.locale)
-                }
+                def key = contract(formatStyle, context)
+                style = sf[key] ?: style
             }
         }
         style = attrs.style ?: style ?: 'label'
         value = context?.get(value) ?: value // Dereference
-        if ((value in Map) && value['@id']) { // Contextualised IRI
-            out << link(base: grailsApplication.config.vocabulary.server, controller: 'vocabulary', action: 'show', params: [iri: value['@id']], class: class_) {
-                 voc.label(value: value, style: style, link: true)
+        if ((value in Map) && value['@id']) {
+            if (value['@type'] == '@id' && value.size() == 2) { // Simple id/type link without additional context
+                out << link(url: value['@id'], class: class_) {
+                    voc.label(value: value, style: style, link: 'external', locale: locale)
+                }
+            } else { // Contextualised IRI
+                out << link(base: server, controller: 'vocabulary', action: 'show', params: [iri: value['@id']], class: class_) {
+                    voc.label(value: value, style: style, link: 'internal', locale: locale)
+                }
             }
         } else if (value instanceof String) { // Uncontextualised IRI
-            out << link(controller: 'vocabulary', action: 'show', params: [iri: value], class: class_) {
-                voc.label(value: value, style: style, link: true)
+            out << link(url: value, class: class_) {
+                voc.label(value: value, style: style, link: 'external', locale: locale)
             }
         } else if (value in Collection) {
             if (value.size() < 2) {
-                value.each { val -> out << voc.format(value: val, class: class_, style: style, language: language) }
+                value.each { val -> out << voc.format(value: val, class: class_, style: style, language: language, locale: locale) }
             } else {
                 out << "<ol class=\"rdf-list\">"
                 value.each { val ->
                     out << "<li>"
-                    out << voc.format(value: val, class: class_, style: style, language: language)
+                    out << voc.format(value: val, class: class_, style: style, language: language, locale: locale)
                     out << "</li>"
                 }
                 out << "</ol>"
@@ -180,9 +188,9 @@ class VocabularyTagLib implements GrailsConfigurationAware {
             if (lang)
                 out << "<span lang=\"${lang}\">"
             out << val.encodeAsHTML()
-            if (language && lang) {
+            if (language && lang && !lang.startsWith(locale.language)) {
                 out << '&nbsp;'
-                out << voc.concept(concept: lang, style: 'language')
+                out << voc.tag(concept: lang, style: 'language')
             }
             if (lang)
                 out << "</span>"
@@ -195,13 +203,15 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * @attr value The value to display
      * @attr style The style to display resources as using the values of {@link #format}
      * @attr context / pageScope.context Used to expand references
-     * @attr link If true include a glyphicon link marker (false by default)
+     * @attr link If null dont include a link marker, if 'internal' include an  interbal link marker if 'external' include an external link marker
+     * @attr locale The locale (defaults to response.locale)
      */
     def label = { attrs, body ->
         def context = attrs.context ?: pageScope.context
         def value = attrs.value
         def style = attrs.style
-        def link = (attrs.link ?: false) as Boolean
+        def link = attrs.link
+        def locale = attrs.locale ?: response.locale
         def addtitle = { title, add ->
             title ? title + '\r' + add : add
         }
@@ -214,9 +224,9 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                 shortId = namespaced(iri, context)
             if (shortId == iri)
                 shortId = null
-            def label = getLabel(value, context, response.locale) ?: shortId ?: ResourceUtils.localName(iri)
-            def title = getTitle(value, context, response.locale)
-            def description = getDescription(value, context, response.locale)
+            def label = getLabel(value, context, locale) ?: shortId ?: ResourceUtils.localName(iri)
+            def title = getTitle(value, context, locale)
+            def description = getDescription(value, context, locale)
             switch (style) {
                 case 'long':
                     if (label && !title)
@@ -273,8 +283,11 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                     out << "<span title=\"${title.encodeAsHTML()}\">"
                 }
                 out << label.encodeAsHTML()
-                if (link) {
+                if (link == 'internal') {
                     out << '<span class="glyphicon glyphicon-link"></span>'
+                }
+                if (link == 'external') {
+                    out << '<span class="glyphicon glyphicon-new-window"></span>'
                 }
                 if (title) {
                     out << '</span>'
@@ -310,12 +323,14 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * @attr vocabulary The name of the vocabulary/dwc term
      * @attr concept The concept
      * @attr style The display style, either an IRI or concept, language or term. If absent, then a concept is assumed until replaced by the proper style
+     * @attr locale The locale to use (defaults to the response.locale)
      */
-    def concept = { attrs, body ->
+    def tag = { attrs, body ->
         def iri = attrs.iri
         def vocabulary = attrs.vocabulary
         def concept = attrs.concept
         def style = attrs.style
+        def locale = attrs.locale ?: response.locale
         style = tagTypes[style] ?: style
         def text = concept ?: ResourceUtils.localName(iri) ?: 'unknown'
         def clazz = 'tag-concept'
@@ -324,7 +339,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         if (style == tagTypes['term'])
             clazz = 'tag-term'
         if (style != tagTypes['language'])
-            text = expandCamelCase(text)
+            text = expandCamelCase(text, locale)
         if (!iri && !vocabulary && !concept)
             concept = 'unknown'
         out << "<span class=\"tag-holder ${clazz}\""
@@ -341,8 +356,6 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * Generate the header that includes all the tag machinery
      */
     def tagHeader = { attrs, body ->
-        def service = grailsApplication.config.vocabulary.service
-        def server = grailsApplication.config.vocabulary.server
         out << "<link rel=\"stylesheet\" href=\"${service}/tag/css\"/>"
         out << "<link rel=\"stylesheet\" href=\"${assetPath(src: 'vocabulary.css')}\"/>"
         out << "<link rel=\"stylesheet\" href=\"${assetPath(src: 'tags.css')}\"/>"
@@ -407,8 +420,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      */
     boolean hasType(Map resource, Map context, Map types) {
         def valid = types.collect { k, v -> contract(v, context) }
-        def type = contract(rdfType, context)
-        def rtypes = resource[type]
+        def rtypes = resource['@type']
         if (!rtypes)
             return false
         return (rtypes in Collection) ? rtypes.any { valid.contains(it) } : valid.contains(rtypes)
@@ -493,7 +505,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
             return ''
         def lt = locale.toLanguageTag()
         def ln = locale.language
-        def finders = [ { it in Map && it['@language'] == lt }, { it in Map && it['@language'] == ln }, { true } ]
+        def finders = [ { it in Map && it['@language'] == lt }, { it in Map && it['@language'] == ln }, { it in String || !it['@language'] } ]
         for (List<String> group: sources) {
             for (Closure<Boolean> finder: finders) {
                 for (String source : group) {
@@ -583,8 +595,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      *
      * @see CamelCaseTokenizer
      */
-    String expandCamelCase(String term) {
-        def locale = response.locale ?: request.locale ?: Locale.default
+    String expandCamelCase(String term, Locale locale) {
         TitleCapitaliser capitaliser = TitleCapitaliser.create(locale.language)
         CamelCaseTokenizer tokenizer = new CamelCaseTokenizer(term)
         return capitaliser.capitalise(tokenizer)
