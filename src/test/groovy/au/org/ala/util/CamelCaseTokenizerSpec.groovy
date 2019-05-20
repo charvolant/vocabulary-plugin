@@ -1,7 +1,6 @@
 package au.org.ala.util
 
-import au.org.ala.vocabulary.VocabularyTagLib
-import grails.testing.web.taglib.TagLibUnitTest
+
 import spock.lang.Specification
 
 /**

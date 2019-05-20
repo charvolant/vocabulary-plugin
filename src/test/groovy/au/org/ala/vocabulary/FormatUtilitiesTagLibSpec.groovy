@@ -1,7 +1,6 @@
 package au.org.ala.vocabulary
 
-
-import grails.testing.web.taglib.TagLibUnitTest
+import grails.test.mixin.TestFor
 import spock.lang.Specification
 
 /**
@@ -10,7 +9,8 @@ import spock.lang.Specification
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
  * @copyright Copyright &copy; 2018 Atlas of Living Australia
  */
-class FormatUtilitiesTagLibSpec extends Specification implements TagLibUnitTest<FormatUtilitiesTagLib> {
+@TestFor(FormatUtilitiesTagLib)
+class FormatUtilitiesTagLibSpec extends Specification {
 
     def 'test fu:jsString 1'() {
         expect:

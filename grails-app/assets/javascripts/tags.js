@@ -10,7 +10,7 @@ function replace_tag(element, base) {
     else if (vocabulary) {
         var vd = VOCABULARY_LOOKUP_VOC[vocabulary];
         if (vd)
-            data = vd[concept];
+            data = vd[concept];0
     }
     if (!data)
         data = VOCABULARY_LOOKUP_TERM[concept];
@@ -30,7 +30,7 @@ function replace_tag(element, base) {
 }
 
 function load_tags(base) {
-    $('.tag-holder').each(function () {
+    $('.tag-holder[expand!="false"]').each(function () {
         replace_tag($(this), base);
     });
 }

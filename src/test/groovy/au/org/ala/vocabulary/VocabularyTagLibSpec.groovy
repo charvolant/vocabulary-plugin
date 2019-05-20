@@ -1,10 +1,7 @@
 package au.org.ala.vocabulary
 
-import au.org.ala.util.ResourceUtils
-import grails.config.Config
-import grails.testing.web.taglib.TagLibUnitTest
+import grails.test.mixin.TestFor
 import groovy.json.JsonSlurper
-import org.springframework.boot.bind.YamlConfigurationFactory
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
 
@@ -14,41 +11,14 @@ import spock.lang.Specification
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
  * @copyright Copyright &copy; 2018 Atlas of Living Australia
  */
-class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<VocabularyTagLib> {
+@TestFor(VocabularyTagLib)
+class VocabularyTagLibSpec extends Specification {
     def setup() {
         def config = new Yaml().load(this.class.getResourceAsStream('voc.yml'))
         grailsApplication.config.merge(config)
-    }
-
-    def 'test contract 1'() {
-        given:
-        def tag = 'http://www.ala.org.au/format/1.0/Tag'
-        def context = [:]
-        context['format:Tag'] = ['@id': tag]
-        expect:
-        tagLib.contract(tag, context) == 'format:Tag'
-    }
-
-    def 'test contract 2'() {
-        given:
-        def tag = 'http://www.ala.org.au/format/1.0/Tag'
-        def concept = 'http://www.w3.org/2004/02/skos/core#Concept'
-        def context = [:]
-        context['format:Tag'] = [ '@id': tag]
-        expect:
-        tagLib.contract(concept, context) == concept
-    }
-
-    def 'test contract 3'() {
-        given:
-        def model = makeLd9()
-        def context = model.context
-        expect:
-        tagLib.contract('http://www.ala.org.au/terms/1.0/DwCVocabulary', context) == 'ala:DwCVocabulary'
-        tagLib.contract('http://rs.tdwg.org/dwc/terms/taxonomicStatus', context) == 'dwc:taxonomicStatus'
-        tagLib.contract('http://www.ala.org.au/format/1.0/backgroundColor', context) == 'format:backgroundColor'
-        tagLib.contract('http://www.ala.org.au/format/1.0/categories/vocabulary', context) == 'http://www.ala.org.au/format/1.0/categories/vocabulary'
-        tagLib.contract('urn:some:random:place', context) == 'urn:some:random:place'
+        def service = new VocabularyService()
+        service.setConfiguration(grailsApplication.config)
+        tagLib.vocabularyService = service
     }
 
     def 'test expandCamelCase 1'() {
@@ -101,101 +71,6 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
         tagLib.expandCamelCase('iso639-1', Locale.ITALY) == 'Iso 639-1'
     }
 
-    def 'test getLabel 1'() {
-        given:
-        def model = makeLd1()
-        expect:
-        tagLib.getLabel(model.resource, model.context, Locale.ENGLISH) == 'accepted'
-    }
-
-    def 'test getLabel 2'() {
-        given:
-        def model = makeLd1()
-        model.resource['rdfs:label'] = [['@value': 'accepted'], ['@value': 'Accepto', '@language': 'en']]
-        expect:
-        tagLib.getLabel(model.resource, model.context, Locale.ENGLISH) == 'Accepto'
-    }
-
-    def 'test getLabel 3'() {
-        given:
-        def model = makeLd1()
-        model.resource['rdfs:label'] = [['@value': 'accepted'], ['@value': 'Accepto', '@language': 'en']]
-        expect:
-        tagLib.getLabel(model.resource, model.context, Locale.FRENCH) == 'accepted'
-    }
-
-    def 'test getLabel 4'() {
-        given:
-        def model = makeLd1()
-        model.resource['rdfs:label'] = [['@value': 'accepted'], ['@value': 'Accepte', '@language': 'fr']]
-        expect:
-        tagLib.getLabel(model.resource, model.context, Locale.FRENCH) == 'Accepte'
-    }
-
-    def 'test getLabel 5'() {
-        given:
-        def model = makeLd9()
-        def context = model.context
-        expect:
-        tagLib.getLabel(model.resource, context, Locale.ENGLISH) == 'Taxonomic Status Vocabulary'
-        tagLib.getLabel(context['dwc:taxonomicStatus'], context, Locale.ENGLISH) == 'taxonomicStatus'
-        tagLib.getLabel(context['dwc:taxonomicStatus'], context, Locale.FRENCH) == 'taxonomicStatus'
-        tagLib.getLabel(context['ala:forTerm'], context, Locale.ENGLISH) == 'for term'
-        tagLib.getLabel(context['ala:forTerm'], context, Locale.FRENCH) == 'for term'
-        tagLib.getLabel(context['xsd:string'], context, Locale.ENGLISH) == null
-        tagLib.getLabel(context['xsd:string'], context, Locale.FRENCH) == null
-        tagLib.getLabel(context['http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted'], context, Locale.ENGLISH) == 'Accepted'
-        tagLib.getLabel(context['http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted'], context, Locale.FRENCH) == 'accepted'
-    }
-
-    def 'test getTitle 1'() {
-        given:
-        def model = makeLd1()
-        expect:
-        tagLib.getTitle(model.resource, model.context, Locale.ENGLISH) == 'Accepted Title'
-    }
-
-    def 'test getTitle 2'() {
-        given:
-        def model = makeLd1()
-        model.resource['dcterms:title'] = [['@value': 'accepted'], ['@value': 'Accepto', '@language': 'en']]
-        expect:
-        tagLib.getTitle(model.resource, model.context, Locale.ENGLISH) == 'Accepto'
-    }
-
-    def 'test getTitle 3'() {
-        given:
-        def model = makeLd1()
-        model.resource['dcterms:title'] = null
-        model.resource['dc:title'] = [['@value': 'accepted'], ['@value': 'Accepto', '@language': 'en']]
-        expect:
-        tagLib.getTitle(model.resource, model.context, Locale.FRENCH) == 'accepted'
-    }
-
-    def 'test getTitle 4'() {
-        given:
-        def model = makeLd1()
-        model.resource['dc:title'] = [['@value': 'accepted'], ['@value': 'Accepte', '@language': 'fr']]
-        expect:
-        tagLib.getTitle(model.resource, model.context, Locale.FRENCH) == 'Accepte'
-    }
-
-    def 'test getTitle 5'() {
-        given:
-        def model = makeLd9()
-        def context = model.context
-        expect:
-        tagLib.getTitle(model.resource, context, Locale.ENGLISH) == 'Taxonomic Status Vocabulary'
-        tagLib.getTitle(context['dwc:taxonomicStatus'], context, Locale.ENGLISH) == null
-        tagLib.getTitle(context['dwc:taxonomicStatus'], context, Locale.FRENCH) == null
-        tagLib.getTitle(context['ala:forTerm'], context, Locale.ENGLISH) == null
-        tagLib.getTitle(context['ala:forTerm'], context, Locale.FRENCH) == null
-        tagLib.getTitle(context['xsd:string'], context, Locale.ENGLISH) == null
-        tagLib.getTitle(context['xsd:string'], context, Locale.FRENCH) == null
-        tagLib.getTitle(context['http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted'], context, Locale.ENGLISH) == 'Accepted'
-        tagLib.getTitle(context['http://www.ala.org.au/terms/1.0/taxonomicStatus/accepted'], context, Locale.FRENCH) == null
-    }
-
     def 'test shortCode 1'() {
         given:
         def model = makeLd8()
@@ -221,27 +96,27 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
 
     def 'test voc:tag 1'() {
         expect:
-        applyTemplate('<voc:tag iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder tag-concept" iri="urn:ietf:rfc:2648">2648</span>'
+        applyTemplate('<voc:tag iri="urn:ietf:rfc:2648"/>') == '<span class="tag-holder " iri="urn:ietf:rfc:2648">2648</span>'
     }
 
     def 'test voc:tag 2'() {
         expect:
-        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder tag-concept" iri="http://www.ala.org.au/format/1.0/style/icon">Icon</span>'
+        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon"/>') == '<span class="tag-holder " iri="http://www.ala.org.au/format/1.0/style/icon">Icon</span>'
     }
 
     def 'test voc:tag 3'() {
         expect:
-        applyTemplate('<voc:tag concept="TK NV"/>') == '<span class="tag-holder tag-concept" concept="TK NV">TK NV</span>'
+        applyTemplate('<voc:tag concept="TK NV"/>') == '<span class="tag-holder " concept="TK NV">TK NV</span>'
     }
 
     def 'test voc:tag 4'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="tkLabels" concept="TK NV"/>') == '<span class="tag-holder tag-concept" vocabulary="tkLabels" concept="TK NV">TK NV</span>'
+        applyTemplate('<voc:tag vocabulary="tkLabels" concept="TK NV"/>') == '<span class="tag-holder " vocabulary="tkLabels" concept="TK NV">TK NV</span>'
     }
 
     def 'test voc:tag 5'() {
         expect:
-        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder tag-concept" vocabulary="taxonomicStatus">Unknown</span>'
+        applyTemplate('<voc:tag vocabulary="taxonomicStatus"/>') == '<span class="tag-holder " vocabulary="taxonomicStatus">Unknown</span>'
     }
 
     def 'test voc:tag 6'() {
@@ -267,6 +142,16 @@ class VocabularyTagLibSpec extends Specification implements TagLibUnitTest<Vocab
     def 'test voc:tag 10'() {
         expect:
         applyTemplate('<voc:tag vocabulary="dwc" concept="occurrenceID" style="term"/>') == '<span class="tag-holder tag-term" vocabulary="dwc" concept="occurrenceID">Occurrence ID</span>'
+    }
+
+    def 'test voc:tag 11'() {
+        expect:
+        applyTemplate('<voc:tag iri="http://www.ala.org.au/format/1.0/style/icon" expand="false"/>') == '<span class="tag-holder " iri="http://www.ala.org.au/format/1.0/style/icon" expand="false">Icon</span>'
+    }
+
+    def 'test voc:tag 12'() {
+        expect:
+        applyTemplate('<voc:tag concept="TK NV" expand="false"/>') == '<span class="tag-holder " concept="TK NV" expand="false">TK NV</span>'
     }
 
     def 'test voc:label 1'() {

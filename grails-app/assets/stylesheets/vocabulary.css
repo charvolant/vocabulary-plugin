@@ -2,6 +2,10 @@
     display: table-row;
 }
 
+.appearance-list li {
+    display: table-row;
+}
+
 .rdf-list {
     list-style-type: circle;
     padding-inline-start: 1em;

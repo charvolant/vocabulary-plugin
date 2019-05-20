@@ -10,7 +10,7 @@ a.tag-concept {
     color: inherit;
 }
 
-.tag-concept {
+.tag-concept.tag-text {
     display: inline-block;
     font-size: smaller;
     padding: 0.2ex 1.0ex 0.2ex 1.5ex;
@@ -18,7 +18,7 @@ a.tag-concept {
     border-radius: 1.5ex 0.5ex 0.5ex 1.5ex;
 }
 
-.tag-concept span:before {
+.tag-concept.tag-text span:before {
     content: "\25cb ";
     position: relative;
     left: -1.0ex;
@@ -28,7 +28,7 @@ a.tag-language {
     color: inherit;
 }
 
-.tag-language {
+.tag-language.tag-text {
     display: inline-block;
     font-size: smaller;
     padding: 0.2ex 1.0ex 0.2ex 1.5ex;

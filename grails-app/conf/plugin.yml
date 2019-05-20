@@ -31,6 +31,11 @@ vocabulary:
       iri: http://www.ala.org.au/format/1.0/style
     width:
       iri: http://www.ala.org.au/format/1.0/width
+  skos:
+    concept:
+      iri: http://www.w3.org/2004/02/skos/core#Concept
+    conceptScheme:
+      iri: http://www.w3.org/2004/02/skos/core#ConceptScheme
   image:
     types:
       image: http://www.ala.org.au/format/1.0/Image

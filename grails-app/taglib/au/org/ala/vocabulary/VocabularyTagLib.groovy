@@ -19,10 +19,8 @@ import grails.core.support.GrailsConfigurationAware
 class VocabularyTagLib implements GrailsConfigurationAware {
     static namespace = "voc"
 
-    /** The vocabulary server */
-    String server
-    /** The vocabulary service */
-    String service
+    def vocabularyService
+
     /** The format:asset IRI */
     String formatAsset
     /** The format:height IRI */
@@ -33,16 +31,14 @@ class VocabularyTagLib implements GrailsConfigurationAware {
     String formatStyle
     /** The format:width IRI */
     String formatWidth
+    /** The skos:Concept type */
+    String skosConcept
+    /** The skos:ConceptScheme type */
+    String skosConceptScheme
     /** The set of types that indicate an image resource */
     Map<String, String> imageTypes
     /** The set of types that indicate a taggable resource */
     Map<String, String> tagTypes
-    /** The sources for labels */
-    List<List<String>> labelSources
-    /** The sources for titles */
-    List<List<String>> titleSources
-    /** The sources for labels */
-    List<List<String>> descriptionSources
 
     /**
      * Update the configuration
@@ -51,8 +47,6 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      */
     @Override
     void setConfiguration(Config config) {
-        server = config.vocabulary.server
-        service = config.vocabulary.service
         formatAsset = config.vocabulary.format.asset.iri
         formatHeight = config.vocabulary.format.height.iri
         formatIcon = config.vocabulary.format.icon.iri
@@ -60,9 +54,8 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         formatWidth = config.vocabulary.format.width.iri
         imageTypes = config.vocabulary.image.types
         tagTypes = config.vocabulary.tag.types
-        labelSources = config.vocabulary.label.sources
-        titleSources = config.vocabulary.title.sources
-        descriptionSources = config.vocabulary.description.sources
+        skosConcept = config.vocabulary.skos.concept.iri
+        skosConceptScheme = config.vocabulary.skos.conceptScheme.iri
     }
 
     /**
@@ -74,7 +67,25 @@ class VocabularyTagLib implements GrailsConfigurationAware {
     def shortCode = { attrs, body ->
         def context = attrs.context ?: pageScope.context
         def iri = attrs.iri
-        out << contract(iri, context)
+        out << vocabularyService.contract(iri, context)
+    }
+
+    /**
+     * Get the label for a resource or value as text.
+     * <p>
+     * Called textLabel since the normal label includes a span
+     *
+     * @attr value The value to get a title for
+     * @attr context Used to expand references (defaults to pageScope.context)
+     * @attr locale The locale to use (default to response.locale)
+     */
+    def textLabel = { attrs, body ->
+        def context = attrs.context ?: pageScope.context
+        def value = attrs.value
+        def locale = attrs.locale ?: response.locale
+        def label = vocabularyService.getLabel(value, context, locale)
+        if (label)
+            out << label
     }
 
     /**
@@ -88,7 +99,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def context = attrs.context ?: pageScope.context
         def value = attrs.value
         def locale = attrs.locale ?: response.locale
-        def text = getTitle(value, context, locale)
+        def text = vocabularyService.getTitle(value, context, locale)
         if (text)
             out << text
     }
@@ -104,7 +115,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def context = attrs.context ?: pageScope.context
         def value = attrs.value
         def locale = attrs.locale ?: response.locale
-        def text = getDescription(value, context, locale)
+        def text = vocabularyService.getDescription(value, context, locale)
         if (text)
             out << text
     }
@@ -146,11 +157,11 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         if (property && context) {
             def sf = context.get(property)
             if (!sf) {
-                property = contract(property, context)
+                property = vocabularyService.contract(property, context)
                 sf = context.get(property)
             }
             if (sf) {
-                def key = contract(formatStyle, context)
+                def key = vocabularyService.contract(formatStyle, context)
                 style = sf[key] ?: style
             }
         }
@@ -162,7 +173,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                     voc.label(value: value, style: style, link: 'external', locale: locale)
                 }
             } else { // Contextualised IRI
-                out << link(base: server, controller: 'vocabulary', action: 'show', params: [iri: value['@id']], class: class_) {
+                out << link(base: vocabularyService.server, controller: 'vocabulary', action: 'show', params: [iri: value['@id']], class: class_) {
                     voc.label(value: value, style: style, link: 'internal', locale: locale)
                 }
             }
@@ -219,14 +230,14 @@ class VocabularyTagLib implements GrailsConfigurationAware {
             out << value.encodeAsHTML()
         } else {
             def iri = value['@id']
-            def shortId = contract(iri, context)
+            def shortId = vocabularyService.contract(iri, context)
             if (shortId == iri)
-                shortId = namespaced(iri, context)
+                shortId = vocabularyService.namespaced(iri, context)
             if (shortId == iri)
                 shortId = null
-            def label = getLabel(value, context, locale) ?: shortId ?: ResourceUtils.localName(iri)
-            def title = getTitle(value, context, locale)
-            def description = getDescription(value, context, locale)
+            def label = vocabularyService.getLabel(value, context, locale)
+            def title = vocabularyService.getTitle(value, context, locale)
+            def description = vocabularyService.getDescription(value, context, locale)
             switch (style) {
                 case 'long':
                     if (label && !title)
@@ -253,10 +264,10 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                 title = addtitle(title, ResourceUtils.shorten(description))
             def icon = null
             if (isImageStyle(style)) {
-                if (hasType(value, context, imageTypes)) {
+                if (vocabularyService.hasType(value, context, imageTypes)) {
                     icon = value
                 } else {
-                    def iref = value[contract(formatIcon, context)]
+                    def iref = value[vocabularyService.contract(formatIcon, context)]
                     if (iref) {
                         iref = context?.get(iref) ?: iref
                         if (iref in Map) {
@@ -266,9 +277,9 @@ class VocabularyTagLib implements GrailsConfigurationAware {
                 }
             }
             if (icon) {
-                def width = icon[contract(formatWidth, context)]?.get('@value') as Integer
-                def height = icon[contract(formatHeight, context)]?.get('@value') as Integer
-                def asset = icon[contract(formatAsset, context)]
+                def width = icon[vocabularyService.contract(formatWidth, context)]?.get('@value') as Integer
+                def height = icon[vocabularyService.contract(formatHeight, context)]?.get('@value') as Integer
+                def asset = icon[vocabularyService.contract(formatAsset, context)]
                 def src = asset ?: icon['@id']
                 out << "<img "
                 if (width)
@@ -331,15 +342,18 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def concept = attrs.concept
         def style = attrs.style
         def locale = attrs.locale ?: response.locale
+        def expand = (attrs.expand ?: true).toBoolean()
         style = tagTypes[style] ?: style
         def text = concept ?: ResourceUtils.localName(iri) ?: 'unknown'
-        def clazz = 'tag-concept'
+        def clazz = ''
+        if (style == tagTypes['concept'])
+            clazz = 'tag-concept'
         if (style == tagTypes['language'])
             clazz = 'tag-language'
+        else
+            text = expandCamelCase(text, locale)
         if (style == tagTypes['term'])
             clazz = 'tag-term'
-        if (style != tagTypes['language'])
-            text = expandCamelCase(text, locale)
         if (!iri && !vocabulary && !concept)
             concept = 'unknown'
         out << "<span class=\"tag-holder ${clazz}\""
@@ -349,6 +363,8 @@ class VocabularyTagLib implements GrailsConfigurationAware {
             out << " vocabulary=\"${vocabulary.encodeAsHTML()}\""
         if (concept)
             out << " concept=\"${concept.encodeAsHTML()}\""
+        if (!expand)
+            out << " expand=\"${expand}\""
         out << ">${text}</span>"
     }
 
@@ -356,14 +372,14 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * Generate the header that includes all the tag machinery
      */
     def tagHeader = { attrs, body ->
-        out << "<link rel=\"stylesheet\" href=\"${service}/tag/css\"/>"
+        out << "<link rel=\"stylesheet\" href=\"${vocabularyService.service}/tag/css\"/>"
         out << "<link rel=\"stylesheet\" href=\"${assetPath(src: 'vocabulary.css')}\"/>"
         out << "<link rel=\"stylesheet\" href=\"${assetPath(src: 'tags.css')}\"/>"
-        out << "<script src=\"${service}/tag/js\"></script>"
+        out << "<script src=\"${vocabularyService.service}/tag/js\"></script>"
         out << "<script src=\"${assetPath(src: 'tags.js')}\"></script>"
         out << '<script type="text/javascript">'
         out << '$(document).ready(function() {'
-        out << "  load_tags('${createLink(base: server, controller: 'vocabulary', action: 'show', absolute: true)}');"
+        out << "  load_tags('${createLink(base: vocabularyService.server, controller: 'vocabulary', action: 'show', absolute: true)}');"
         out << "});"
         out << '</script>'
     }
@@ -383,7 +399,7 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def context = attrs.context ?: pageScope.context
         style = tagTypes[style] ?: style
         style = style ? [style: style] : tagTypes
-        if ( hasType(value, context, style) ) {
+        if ( vocabularyService.hasType(value, context, style) ) {
             out << body()
         }
     }
@@ -403,27 +419,41 @@ class VocabularyTagLib implements GrailsConfigurationAware {
         def context = attrs.context ?: pageScope.context
         style = imageTypes[style] ?: style
         style = style ? [style: style] : imageTypes
-        def types = value[type]
-        if ( hasType(value, context, style) ) {
+        if ( vocabularyService.hasType(value, context, style) ) {
             out << body()
         }
     }
 
     /**
-     * See if a resource has a particular type
+     * Test to see if a resource is a skos concept. If so, include the body.
+     * <p>
+     * This looks for skos:Concept in the types.
      *
-     * @param resource The resource
-     * @param context The context
-     * @param types The list of matching types
-     *
-     * @return True if the resource has a type matching any of the supplied types
+     * @attr value The resource to test (a JSON LD resource)
+     * @attr context The associated context defaults to pageScope.context
      */
-    boolean hasType(Map resource, Map context, Map types) {
-        def valid = types.collect { k, v -> contract(v, context) }
-        def rtypes = resource['@type']
-        if (!rtypes)
-            return false
-        return (rtypes in Collection) ? rtypes.any { valid.contains(it) } : valid.contains(rtypes)
+    def isSkosConcept = { attrs, body ->
+        def value = attrs.value
+        def context = attrs.context ?: pageScope.context
+        if ( vocabularyService.hasType(value, context, skosConcept) ) {
+            out << body()
+        }
+    }
+
+    /**
+     * Test to see if a resource is a skos concept scheme. If so, include the body.
+     * <p>
+     * This looks for skos:ConceptScheme in the types.
+     *
+     * @attr value The resource to test (a JSON LD resource)
+     * @attr context The associated context defaults to pageScope.context
+     */
+    def isSkosConceptScheme = { attrs, body ->
+        def value = attrs.value
+        def context = attrs.context ?: pageScope.context
+        if ( vocabularyService.hasType(value, context, skosConceptScheme) ) {
+            out << body()
+        }
     }
 
     /**
@@ -440,139 +470,6 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      */
     def localName = { attrs, body ->
         out << ResourceUtils.localName(attrs.iri)
-    }
-
-    /**
-     * Get a suitable label (short descriptive text) for a resource
-     *
-     * @param resource The resource
-     * @param context The resource context
-     * @param locale The preferred locale
-     *
-     * @return A label, or none for not present
-     */
-    def getLabel(Map resource, Map context, Locale locale) {
-        return getText(resource, context, labelSources, locale)
-    }
-
-    /**
-     * Get a suitable title (short headline text) for a resource
-     *
-     * @param resource The resource
-     * @param context The resource context
-     * @param locale The preferred locale
-     *
-     * @return A title, or none for not present
-     */
-    def getTitle(Map resource, Map context, Locale locale) {
-        return getText(resource, context, titleSources, locale)
-    }
-    /**
-     * Get a suitable description (long descriptive text) for a resource
-     *
-     * @param resource The resource
-     * @param context The resource context
-     * @param locale The preferred locale
-     *
-     * @return A description, or none for not present
-     */
-    def getDescription(Map resource, Map context, Locale locale) {
-        return getText(resource, context, descriptionSources, locale)
-    }
-
-    /**
-     * Search for a suitable property.
-     * <p>
-     * Groups of sources are searched in order first for a language tag match, then for a language match and then for a value.
-     * If one is not found, then the next group of sources is tried.
-      * </p>
-     * <p>
-     * For example, if the sources are <code>[[dcterms:title, >dc:title]]</code>, the locale is 'fr-CA' and the possible values are
-     * <code>dcterms:title = ['chercheuse'@fr, 'researcher' ] dc:title = ['chercheure'@fr-CA ]</code> will result in 'chercheure'.
-     * If the sources are <code>[[skos:prefLabel], [rdfs:label]]</code>, the locale is 'fr-CA' and the possible values
-     * are <code>skos:prefLabel = ['tofu'@fr, 'tahu'], rdfs:label = ['toffu'@fr-CA ]</code> with result in 'tofu'
-     * </p>
-     *
-     * @param resource The resource
-     * @param context The resource context
-     * @param sources The sources, a list of lists of
-     * @param locale The locale to use
-     *
-     * @return A suitable value or null for not found
-     */
-    protected def getText(Map resource, Map context, List<List<String>> sources, Locale locale) {
-        if (!resource)
-            return ''
-        def lt = locale.toLanguageTag()
-        def ln = locale.language
-        def finders = [ { it in Map && it['@language'] == lt }, { it in Map && it['@language'] == ln }, { it in String || !it['@language'] } ]
-        for (List<String> group: sources) {
-            for (Closure<Boolean> finder: finders) {
-                for (String source : group) {
-                    source = contract(source, context)
-                    def labels = resource[source]
-                    if (!labels)
-                        continue
-                    def lab = (labels in Iterable) ? labels.find(finder) : (finder(labels) ? labels : null)
-                    if (lab)
-                        return (lab in Map) ? lab['@value'] : lab
-                }
-            }
-         }
-        return null
-    }
-
-    /**
-     * See if we can go from a full URL to a contracted version with a prefix.
-     * <p>
-     * Useful if someone has supplied a complete URL for something which, in the context
-     * is simplified.
-     * <p>
-     * The first time this is used, a '@map' value is injected into the context to speed up contractions
-     *
-     * @param identifier The identifier
-     * @param context The context map
-     *
-     * @return A possible contracted identifier
-     */
-    def contract(String identifier, Map context) {
-        if (!context)
-            return identifier
-        def map = context['@map']
-        if(map == null) {
-            synchronized (context) {
-                map = context['@map']
-                if (map == null) {
-                    map = context.inject([:]) { m, k, v ->
-                        if (v in String) {
-                            m[v] = k
-                        } else if (v in Map && v['@id'])
-                            m[v['@id']] = k
-                        m
-                    }
-                    context['@map'] = map
-                }
-            }
-        }
-        return map[identifier] ?: identifier
-    }
-
-    /**
-     * See if we can namespace an iri
-     *
-     * @param identifier The IRI
-     * @param context The context, with a namespace map
-     *
-     * @return Either the namespaced IRI or the unchanged IRI
-     */
-    def namespaced(String identifier, Map context) {
-        def namespace = context.find { entry -> entry.value in String && identifier.startsWith(entry.value) }
-        if (namespace) {
-            def local = identifier.substring(namespace.value.length())
-            if (local && local.matches(/[^\/#:]+/))
-                return namespace.key + ':' + local
-        }
-        return identifier
     }
 
     /**
