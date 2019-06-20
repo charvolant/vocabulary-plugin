@@ -6,7 +6,6 @@ import grails.core.support.GrailsConfigurationAware
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
 import groovy.json.JsonSlurper
-import org.springframework.boot.json.JsonParserFactory
 import org.springframework.http.HttpStatus
 
 /**
@@ -112,6 +111,18 @@ class VocabularyService implements GrailsConfigurationAware {
     }
 
     /**
+     * Get the SKOS tree of a resource.
+     *
+     * @param iri The resource IRI
+     * @param locale The request locale for correct language-specific labelling
+     *
+     * @return The skos tree, starting from the concept scheme, in [resource:, children:] tree form
+     */
+    def getSkosTree(String iri, Locale locale) {
+        return service("${service}/skos/tree?iri={iri}", [iri: iri], locale)
+    }
+
+    /**
      * Get the parents of a SKOS resource.
      *
      * @param iri The resource IRI
@@ -157,9 +168,9 @@ class VocabularyService implements GrailsConfigurationAware {
     }
 
     /**
-     * Get a suitable label (short descriptive text) for a resource
+     * Get a suitable label (short descriptive text) for a resource as a JSON-LD map
      *
-     * @param resource The resource
+     * @param resource The resource as a JSON-LD map
      * @param context The resource context
      * @param locale The preferred locale
      *
@@ -190,6 +201,7 @@ class VocabularyService implements GrailsConfigurationAware {
     def getTitle(Map resource, Map context, Locale locale) {
         return getText(resource, context, titleSources, locale)
     }
+
     /**
      * Get a suitable description (long descriptive text) for a resource
      *

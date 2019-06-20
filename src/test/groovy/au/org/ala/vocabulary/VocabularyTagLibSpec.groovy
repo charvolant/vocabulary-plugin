@@ -18,6 +18,7 @@ class VocabularyTagLibSpec extends Specification {
         grailsApplication.config.merge(config)
         def service = new VocabularyService()
         service.setConfiguration(grailsApplication.config)
+        tagLib.setConfiguration(grailsApplication.config)
         tagLib.vocabularyService = service
     }
 
@@ -432,6 +433,34 @@ class VocabularyTagLibSpec extends Specification {
         model.resource.'@type' << 'format:Term'
         expect:
         applyTemplate('<voc:isTag value="${resource}" style="term">I See You</voc:isTag>', model) == 'I See You'
+    }
+
+    def 'test voc:isSkos 1'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isSkos value="${resource}">hello</voc:isSkos>', model) == 'hello'
+    }
+
+    def 'test voc:isSkos 2'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isSkos value="${resource}" concept="false">hello</voc:isSkos>', model) == ''
+    }
+
+    def 'test voc:isSkos 3'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isSkos value="${resource}" concept="true">hello</voc:isSkos>', model) == 'hello'
+    }
+
+    def 'test voc:isSkos 4'() {
+        given:
+        def model = makeLd8()
+        expect:
+        applyTemplate('<voc:isSkos value="${resource}" scheme="false">hello</voc:isSkos>', model) == 'hello'
     }
 
     def makeContext1() {

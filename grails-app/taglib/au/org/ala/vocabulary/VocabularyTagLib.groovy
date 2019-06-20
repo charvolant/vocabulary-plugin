@@ -430,28 +430,16 @@ class VocabularyTagLib implements GrailsConfigurationAware {
      * This looks for skos:Concept in the types.
      *
      * @attr value The resource to test (a JSON LD resource)
+     * @attr concept Check for a skos concept (default true)
+     * @attr scheme Check for a skos scheme (default true)
      * @attr context The associated context defaults to pageScope.context
      */
-    def isSkosConcept = { attrs, body ->
+    def isSkos = { attrs, body ->
         def value = attrs.value
+        boolean isConcept = attrs.containsKey("concept") ? attrs.concept.toBoolean() : true
+        boolean isScheme = attrs.containsKey("scheme") ? attrs.scheme.toBoolean() : true
         def context = attrs.context ?: pageScope.context
-        if ( vocabularyService.hasType(value, context, skosConcept) ) {
-            out << body()
-        }
-    }
-
-    /**
-     * Test to see if a resource is a skos concept scheme. If so, include the body.
-     * <p>
-     * This looks for skos:ConceptScheme in the types.
-     *
-     * @attr value The resource to test (a JSON LD resource)
-     * @attr context The associated context defaults to pageScope.context
-     */
-    def isSkosConceptScheme = { attrs, body ->
-        def value = attrs.value
-        def context = attrs.context ?: pageScope.context
-        if ( vocabularyService.hasType(value, context, skosConceptScheme) ) {
+        if ( (isConcept && vocabularyService.hasType(value, context, skosConcept)) || (isScheme && vocabularyService.hasType(value, context, skosConceptScheme)) ) {
             out << body()
         }
     }
