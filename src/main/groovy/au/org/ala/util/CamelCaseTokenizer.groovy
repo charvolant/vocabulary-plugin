@@ -11,7 +11,7 @@ package au.org.ala.util
  * </li>
  *
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
- * @copyright Copyright &copy; 2019 Atlas of Living Australia
+ * @license See LICENSE
  */
 class CamelCaseTokenizer implements Enumeration<String> {
     protected static DASH = '-' as char

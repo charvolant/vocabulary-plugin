@@ -7,7 +7,7 @@ import spock.lang.Specification
  * Unit tests for {@link FormatUtilitiesTagLib}
  *
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
- * @copyright Copyright &copy; 2018 Atlas of Living Australia
+ * @license See LICENSE
  */
 @TestFor(FormatUtilitiesTagLib)
 class FormatUtilitiesTagLibSpec extends Specification {

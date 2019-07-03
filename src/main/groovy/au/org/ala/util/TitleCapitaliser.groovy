@@ -25,7 +25,7 @@ package au.org.ala.util
  * </p>
  *
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
- * @copyright Copyright &copy; 2017 Atlas of Living Australia
+ * @license See LICENSE
  */
 class TitleCapitaliser {
     /** The resource bundle to use for word lookups */

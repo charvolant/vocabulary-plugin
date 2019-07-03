@@ -13,7 +13,7 @@ import spock.lang.Specification
  * Unit tests for {@link VocabularyTagLib}
  *
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
- * @copyright Copyright &copy; 2018 Atlas of Living Australia
+ * @license See LICENSE
  */
 @TestFor(VocabularyService)
 class VocabularyServiceSpec extends Specification {

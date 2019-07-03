@@ -3,7 +3,7 @@ package au.org.ala.util
  * Useful utilities for handling resources and IRIs
  *
  * @author Doug Palmer &lt;Doug.Palmer@csiro.au&gt;
- * @copyright Copyright &copy; 2019 Atlas of Living Australia
+ * @license See LICENSE
  */
 class ResourceUtils {
     static SHORTEN_LENGTH = 100
